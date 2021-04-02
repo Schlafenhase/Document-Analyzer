@@ -16,7 +16,7 @@ const Input = (props) => {
   const [empty, setEmpty] = useState(true);
   return (
     <Container>
-      <label style={{ opacity: empty ? 0 : 1 }}>{props.label}</label>
+      <label style={{ opacity: empty ? 0 : 0.3 }}>{props.label}</label>
       <input
         {...props}
         placeholder={props.label}
