@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DocumentAnalyzerAPI.A.Interfaces;
 using DocumentAnalyzerAPI.A.ViewModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentAnalyzerAPI.MVC.Controllers
 {
+    [Route("Api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FileController : Controller
     {
         private IFileService _fileService;
@@ -18,11 +21,11 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
             _fileService = fileService;
         }
 
-        [Authorize]
-        public IActionResult Index()
+        [Route("Files")]
+        [HttpGet]
+        public FileViewModel GetEmployees()
         {
-            FileViewModel model = _fileService.GetFiles();
-            return View(model);
+            return _fileService.GetFiles();
         }
     }
 }

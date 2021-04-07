@@ -27,11 +27,6 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto user)

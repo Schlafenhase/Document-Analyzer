@@ -21,12 +21,6 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
             _employeeService = employeeService;
         }
 
-        public IActionResult Index()
-        {
-            EmployeeViewModel model = _employeeService.GetEmployees();
-            return View(model);
-        }
-
         [Route("Employees")]
         [HttpGet]
         public EmployeeViewModel GetEmployees()

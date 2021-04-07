@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DocumentAnalyzerAPI.MVC.Configuration;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace DocumentAnalyzerAPI.MVC
 {
@@ -61,7 +62,7 @@ namespace DocumentAnalyzerAPI.MVC
                     };
                 });
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllersWithViews();
@@ -77,6 +78,12 @@ namespace DocumentAnalyzerAPI.MVC
 
             services.AddCors();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DocumentAnalyzerAPI", Version = "v1" });
+              //  c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
+
             RegisterServices(services);
         }
 
@@ -86,6 +93,8 @@ namespace DocumentAnalyzerAPI.MVC
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "DocumentAnalyzer v1"));
                 app.UseDatabaseErrorPage();
             }
             else
