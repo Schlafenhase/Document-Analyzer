@@ -13,15 +13,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocumentAnalyzerAPI.Infraes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocumentAnalyzerAPI.UI.MVC", "DocumentAnalyzerAPI.UI.MVC", "{808B2EC2-E849-4B98-BC2E-30159B390FDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentAnalyzerAPI.MVC", "DocumentAnalyzerAPI.MVC\DocumentAnalyzerAPI.MVC.csproj", "{73EF5D5F-38BE-4D11-876A-6AA1006F1E38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.MVC", "DocumentAnalyzerAPI.MVC\DocumentAnalyzerAPI.MVC.csproj", "{73EF5D5F-38BE-4D11-876A-6AA1006F1E38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentAnalyzerAPI.D", "DocumentAnalyzerAPI.D\DocumentAnalyzerAPI.D.csproj", "{2844E7FB-150B-481E-AB23-1C6D02670AFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.D", "DocumentAnalyzerAPI.D\DocumentAnalyzerAPI.D.csproj", "{2844E7FB-150B-481E-AB23-1C6D02670AFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentAnalyzerAPI.I.D", "DocumentAnalyzerAPI.I.D\DocumentAnalyzerAPI.I.D.csproj", "{C5F1C933-9B7D-4E2C-9B1D-266CD466F396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.I.D", "DocumentAnalyzerAPI.I.D\DocumentAnalyzerAPI.I.D.csproj", "{C5F1C933-9B7D-4E2C-9B1D-266CD466F396}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentAnalyzerAPI.A", "DocumentAnalyzerAPI.A\DocumentAnalyzerAPI.A.csproj", "{A1143F8C-843C-41C0-BDFD-D88689ABD250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.A", "DocumentAnalyzerAPI.A\DocumentAnalyzerAPI.A.csproj", "{A1143F8C-843C-41C0-BDFD-D88689ABD250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentAnalyzerAPI.I.IoC", "DocumentAnalyzerAPI.I.IoC\DocumentAnalyzerAPI.I.IoC.csproj", "{4180A504-88F9-429C-8570-F37B57521CE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.I.IoC", "DocumentAnalyzerAPI.I.IoC\DocumentAnalyzerAPI.I.IoC.csproj", "{4180A504-88F9-429C-8570-F37B57521CE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
