@@ -1,6 +1,7 @@
 ﻿using DocumentAnalyzerAPI.A.Interfaces;
 using DocumentAnalyzerAPI.A.ViewModels;
 using DocumentAnalyzerAPI.D.Interfaces;
+using DocumentAnalyzerAPI.D.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,12 @@ namespace DocumentAnalyzerAPI.A.Services
             {
                 Employees = _employeeRepository.GetEmployees()
             };
+        }
+
+        public void AddEmployee(Employee employee)
+        {
+            _employeeRepository.AddEmployee(employee);
+            return;
         }
     }
 }

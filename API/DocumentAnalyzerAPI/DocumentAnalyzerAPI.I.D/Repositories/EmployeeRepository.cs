@@ -18,5 +18,12 @@ namespace DocumentAnalyzerAPI.I.D.Repositories
         {
             return _context.Employees;
         }
+
+        public void AddEmployee(Employee employee)
+        {
+            _context.Add(employee);
+            _context.SaveChanges();
+            return;
+        }
     }
 }

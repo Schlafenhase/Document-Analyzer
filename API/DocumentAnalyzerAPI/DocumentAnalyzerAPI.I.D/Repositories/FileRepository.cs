@@ -18,5 +18,12 @@ namespace DocumentAnalyzerAPI.I.D.Repositories
         {
             return _context.Files;
         }
+
+        public void AddFile(File file)
+        {
+            _context.Add(file);
+            _context.SaveChanges();
+            return;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DocumentAnalyzerAPI.A.Interfaces;
 using DocumentAnalyzerAPI.A.ViewModels;
 using DocumentAnalyzerAPI.D.Interfaces;
+using DocumentAnalyzerAPI.D.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,12 @@ namespace DocumentAnalyzerAPI.A.Services
             {
                 Files = _fileRepository.GetFiles()
             };
+        }
+
+        public void AddFile(File file)
+        {
+            _fileRepository.AddFile(file);
+            return;
         }
     }
 }

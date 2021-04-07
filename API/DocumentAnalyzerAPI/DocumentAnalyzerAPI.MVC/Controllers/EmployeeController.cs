@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DocumentAnalyzerAPI.A.Interfaces;
 using DocumentAnalyzerAPI.A.ViewModels;
+using DocumentAnalyzerAPI.D.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,13 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
         public EmployeeViewModel GetEmployees()
         {
             return _employeeService.GetEmployees();
+        }
+
+        [HttpPost]
+        public void AddEmployee([FromBody] Employee employee)
+        {
+            _employeeService.AddEmployee(employee);
+            return;
         }
     }
 }

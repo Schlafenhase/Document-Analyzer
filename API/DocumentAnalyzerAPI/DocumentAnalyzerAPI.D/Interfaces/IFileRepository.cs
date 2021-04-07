@@ -8,5 +8,7 @@ namespace DocumentAnalyzerAPI.D.Interfaces
     public interface IFileRepository
     {
         IEnumerable<File> GetFiles();
+
+        void AddFile(File file);
     }
 }

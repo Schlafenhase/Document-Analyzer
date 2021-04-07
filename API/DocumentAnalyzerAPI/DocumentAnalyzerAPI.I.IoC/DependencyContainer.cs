@@ -16,6 +16,7 @@ namespace DocumentAnalyzerAPI.I.IoC
             //DocumentAnalyzerAPI.A
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<INLPService, NLPService>();
 
             //DocumentAnalyzerAPI.D.Interfaces | DocumentAnalyzerAPI.I.D.Repositories
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
