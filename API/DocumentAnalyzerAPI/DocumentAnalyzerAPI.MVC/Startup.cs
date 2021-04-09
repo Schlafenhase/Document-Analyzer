@@ -19,6 +19,9 @@ using DocumentAnalyzerAPI.MVC.Configuration;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using DocumentAnalyzerAPI.MVC.Models;
+using Microsoft.Extensions.Options;
+using DocumentAnalyzerAPI.MVC.Services;
 
 namespace DocumentAnalyzerAPI.MVC
 {
@@ -64,6 +67,15 @@ namespace DocumentAnalyzerAPI.MVC
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // MongoDB Startup
+            services.Configure<MongoDatabaseSettings>(
+                Configuration.GetSection(nameof(MongoDatabaseSettings)));
+
+            services.AddSingleton<IMongoDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
+
+            services.AddSingleton<MongoFileService>();
 
             services.AddControllersWithViews();
 
