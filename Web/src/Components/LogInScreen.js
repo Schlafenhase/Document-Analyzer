@@ -9,11 +9,16 @@ const Div = styled.div`
   overflow: hidden;
   height: 100%;
   display: flex;
+  background-image: url(${login});
+  background-size: contain;
+  background-position: left;
 `;
 
 const Container = styled.div`
+  margin-left: auto;
   background-color: #eef0f2;
   padding: 16px;
+  width: 320px;
 
   text-align: center;
   justify-content: center;
@@ -29,15 +34,9 @@ const Container = styled.div`
   }
 `;
 
-const Img = styled.img`
-  width: 100%;
-  min-height: 100%;
-`;
-
 const LogInScreen = () => {
   return (
     <Div>
-      <Img src={login}></Img>
       <Container>
         <h1>¡Bienvenido a Document Analyzer!</h1>
         <Input label="Nombre de usuario"></Input>

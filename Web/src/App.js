@@ -9,9 +9,9 @@ function App() {
   console.log(location);
   return (
     <div className="App">
-      {location.pathname !== "/login" && (
+      {location.pathname !== "/" && (
         <div>
-          <Link to="/login">Cerrar sesión</Link>
+          <Link to="/">Cerrar sesión</Link>
           <span> | </span>
           <Link to="/home">Documentos</Link>
           <span> | </span>
@@ -19,7 +19,7 @@ function App() {
         </div>
       )}
       <Switch>
-        <Route path="/login">
+        <Route path="/" exact>
           <LogInScreen></LogInScreen>
         </Route>
         <Route path="/home">
@@ -28,7 +28,7 @@ function App() {
         <Route path="/usernames">
           <UserNamesScreen></UserNamesScreen>
         </Route>
-        <Redirect to="/login"></Redirect>
+        <Redirect to="/"></Redirect>
       </Switch>
     </div>
   );
