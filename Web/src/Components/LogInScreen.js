@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import login from "../assets/login.jpg";
-import Button from "./Button";
-import Input from "./Input";
+import Button from "./UI/Button";
+import Input from "./UI/Input";
 
 const Div = styled.div`
   overflow: hidden;

@@ -7,11 +7,6 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Label = styled.label`
-  position: absolute;
-  top: -16px;
-`;
-
 const Input = (props) => {
   const [empty, setEmpty] = useState(true);
   return (

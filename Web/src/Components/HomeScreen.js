@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Button from "./Button";
-import Table from "./Table";
+import Button from "./UI/Button";
+import Table from "./UI/Table";
 
 const DATA = [
   {
@@ -65,10 +65,11 @@ const HomeScreen = () => {
 
   return (
     <Div>
-      <Link to="/login">Cerrar sesión</Link>
-      <hr></hr>
       <Table data={data}></Table>
-      <Button onClick={insert}>Nuevo archivo</Button>
+      <div>
+        <input type="file"></input>
+        <Button onClick={insert}>Agregar</Button>
+      </div>
     </Div>
   );
 };
