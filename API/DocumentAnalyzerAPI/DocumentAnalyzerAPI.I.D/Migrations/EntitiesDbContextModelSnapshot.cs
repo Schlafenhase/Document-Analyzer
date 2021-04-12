@@ -46,9 +46,6 @@ namespace DocumentAnalyzerAPI.I.D.Migrations
                     b.Property<int>("Progress")
                         .HasColumnType("int");
 
-                    b.Property<string>("URL")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Files");

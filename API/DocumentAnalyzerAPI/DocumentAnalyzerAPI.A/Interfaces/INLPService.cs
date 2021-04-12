@@ -6,6 +6,6 @@ namespace DocumentAnalyzerAPI.A.Interfaces
 {
     public interface INLPService
     {
-        void SearchEmployees();
+        void SearchEmployees(string fileName, string connectionString, string containerName, string apiKey);
     }
 }

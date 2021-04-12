@@ -38,6 +38,8 @@ namespace DocumentAnalyzerAPI.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            services.Configure<AzureBlobStorageConfig>(Configuration.GetSection("AzureObjectStorage"));
+            services.Configure<CloudmersiveNLPConfig>(Configuration.GetSection("CloudmersiveNLP"));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -93,7 +95,6 @@ namespace DocumentAnalyzerAPI.MVC
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DocumentAnalyzerAPI", Version = "v1" });
-              //  c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
             RegisterServices(services);
