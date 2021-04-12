@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 namespace DocumentAnalyzerAPI.MVC.Controllers
 {
     [Route("Api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AzureBlobAuthController : Controller
     {
         private IAzureBlobAuthService _azureBlobAuthService;

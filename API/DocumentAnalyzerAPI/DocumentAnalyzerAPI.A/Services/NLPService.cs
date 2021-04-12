@@ -82,7 +82,7 @@ namespace DocumentAnalyzerAPI.A.Services
 
             var doc = new Catalyst.Document(text, Language.English);
             nlp.ProcessSingle(doc);
-            //PrintDocumentEntities(doc);
+            PrintDocumentEntities(doc);
 
             Dictionary<string, int> results = new Dictionary<string, int>();
             var employees = _employeeService.GetEmployees().Employees;

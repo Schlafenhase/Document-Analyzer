@@ -30,7 +30,7 @@ namespace DocumentAnalyzerAPI.MVC.Services
             _mongoFiles.Find(file => true).ToList();
 
         public MongoFile Get(string id) =>
-            _mongoFiles.Find<MongoFile>(file => file.Id == id).FirstOrDefault();
+            _mongoFiles.Find<MongoFile>(file => file.FileId == int.Parse(id)).FirstOrDefault();
 
         public MongoFile Create(MongoFile file)
         {
