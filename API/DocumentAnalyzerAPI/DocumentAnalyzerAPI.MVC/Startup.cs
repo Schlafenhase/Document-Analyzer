@@ -39,7 +39,6 @@ namespace DocumentAnalyzerAPI.MVC
         {
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.Configure<AzureBlobStorageConfig>(Configuration.GetSection("AzureObjectStorage"));
-            services.Configure<CloudmersiveNLPConfig>(Configuration.GetSection("CloudmersiveNLP"));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

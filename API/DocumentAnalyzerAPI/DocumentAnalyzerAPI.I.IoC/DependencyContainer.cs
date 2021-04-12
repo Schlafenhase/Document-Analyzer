@@ -17,6 +17,7 @@ namespace DocumentAnalyzerAPI.I.IoC
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<INLPService, NLPService>();
+            services.AddScoped<IAzureBlobAuthService, AzureBlobAuthService>();
 
             //DocumentAnalyzerAPI.D.Interfaces | DocumentAnalyzerAPI.I.D.Repositories
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentAnalyzerAPI.D.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,6 @@ namespace DocumentAnalyzerAPI.A.Interfaces
 {
     public interface INLPService
     {
-        void SearchEmployees(string fileName, string connectionString, string containerName, string apiKey);
+        void SearchEmployees(File file, string connectionString, string containerName);
     }
 }

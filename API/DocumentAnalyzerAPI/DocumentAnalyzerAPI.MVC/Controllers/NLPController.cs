@@ -19,13 +19,11 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
     {
         private INLPService _nlpService;
         private readonly AzureBlobStorageConfig _azureBlobStorageConfig;
-        private readonly CloudmersiveNLPConfig _cloudmersiveNLPConfig;
 
-        public NLPController(INLPService nlpService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor, IOptionsMonitor<CloudmersiveNLPConfig> cloudmersiveOptionsMonitor)
+        public NLPController(INLPService nlpService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor)
         {
             _nlpService = nlpService;
             _azureBlobStorageConfig = azureOptionsMonitor.CurrentValue;
-            _cloudmersiveNLPConfig = cloudmersiveOptionsMonitor.CurrentValue;
         }
 
         [HttpPost]
@@ -33,7 +31,7 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
         {
             try
             {
-                _nlpService.SearchEmployees(file.Name, _azureBlobStorageConfig.ConectionString, _azureBlobStorageConfig.ContainerName, _cloudmersiveNLPConfig.APIKey);
+                _nlpService.SearchEmployees(file, _azureBlobStorageConfig.ConectionString, _azureBlobStorageConfig.ContainerName);
                 return 1;
             }
             catch

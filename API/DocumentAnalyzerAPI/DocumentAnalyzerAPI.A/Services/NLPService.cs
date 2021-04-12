@@ -12,16 +12,28 @@ using Spire.Pdf;
 using Mosaik.Core;
 using System.Linq;
 using System.Threading;
+using DocumentAnalyzerAPI.A.ViewModels;
+using System.Threading.Tasks;
 
 namespace DocumentAnalyzerAPI.A.Services
 {
     public class NLPService : INLPService
     {
-        public void SearchEmployees(string fileName, string connectionString, string containerName, string apiKey)
+        private IFileService _fileService;
+        private IEmployeeService _employeeService;
+
+        public NLPService(IFileService fileService, IEmployeeService employeeService)
         {
-            string filePath = GeneratePath(fileName);
-            string extension = Path.GetExtension(fileName).ToLower();
-            DownloadFile(fileName, filePath, connectionString, containerName);
+            _fileService = fileService;
+            _employeeService = employeeService;
+        }
+
+        public void SearchEmployees(D.Models.File file, string connectionString, string containerName)
+        {
+            string filePath = GeneratePath(file.Name);
+            string extension = Path.GetExtension(file.Name).ToLower();
+            string text;
+            DownloadFile(file.Name, filePath, connectionString, containerName);
 
             if (extension == ".pdf")
             {
@@ -34,57 +46,58 @@ namespace DocumentAnalyzerAPI.A.Services
                 }
 
                 doc.Close();
-                string text = buffer.ToString();
-                text = text.Replace(Environment.NewLine, " ");
-                buffer = new StringBuilder();
-
-                foreach (var element in text.ToCharArray())
-                {
-                    if (buffer.Length == 0)
-                    {
-                        buffer.Append(element);
-                    }
-                    else if (buffer[buffer.Length - 1] == ' ' && element == ' ')
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        buffer.Append(element);
-                    }
-                }
                 text = buffer.ToString();
-
-                File.Delete(filePath);
-                Debug.WriteLine(text);
-                Thread t = new Thread(new ParameterizedThreadStart(SendStringToNLP));
-                t.Start(text);
+                text = text.Replace(Environment.NewLine, " ");
+                text = DeleteRepeatedSpaces(text);
+                SearchEmployeesAux(file, filePath, text);
                 return;
             }
             else if (extension == ".docx")
             {
                 Spire.Doc.Document doc = new Spire.Doc.Document();
                 doc.LoadFromFile(filePath);
-                string text = doc.GetText();
-                text = text.Replace(Environment.NewLine, " ");
+                text = doc.GetText();
                 doc.Close();
-
-                File.Delete(filePath);
-                Debug.WriteLine(text);
-                Thread t = new Thread(new ParameterizedThreadStart(SendStringToNLP));
-                t.Start(text);
+                SearchEmployeesAux(file, filePath, text);
                 return;
             }
             else
             {
-                string text = File.ReadAllText(filePath);
-                text = text.Replace(Environment.NewLine, " ");
-                File.Delete(filePath);
-                Debug.WriteLine(text);
-                Thread t = new Thread(new ParameterizedThreadStart(SendStringToNLP));
-                t.Start(text);
+                text = File.ReadAllText(filePath);
+                SearchEmployeesAux(file, filePath, text);
                 return;
             }
+        }
+
+        private void SearchEmployeesAux(D.Models.File file, string filePath, string text)
+        {
+            text = text.Replace(Environment.NewLine, " ");
+            File.Delete(filePath);
+            _fileService.AddFile(file);
+            SendStringToNLP(text);
+            return;
+        }
+
+        private string DeleteRepeatedSpaces(string text)
+        {
+            StringBuilder buffer = new StringBuilder();
+
+            foreach (var element in text.ToCharArray())
+            {
+                if (buffer.Length == 0)
+                {
+                    buffer.Append(element);
+                }
+                else if (buffer[buffer.Length - 1] == ' ' && element == ' ')
+                {
+                    continue;
+                }
+                else
+                {
+                    buffer.Append(element);
+                }
+            }
+            return buffer.ToString();
         }
 
         private string GeneratePath(string fileName)
@@ -111,12 +124,27 @@ namespace DocumentAnalyzerAPI.A.Services
 
             var doc = new Catalyst.Document(text, Language.English);
             nlp.ProcessSingle(doc);
-            PrintDocumentEntities(doc);
+           // PrintDocumentEntities(doc);
+
+            var employees = _employeeService.GetEmployees().Employees;
+            foreach (var employee in employees)
+            {
+                foreach (var entity in doc.SelectMany(span => span.GetEntities()))
+                {
+                    if (employee.Name == entity.Value)
+                    {
+                        continue;
+                    }
+                }
+            }
+            return;
         }
 
         private static void PrintDocumentEntities(IDocument doc)
         {
-            Debug.WriteLine($"Input text:\n\t'{doc.Value}'\n\nTokenized Value:\n\t'{doc.TokenizedValue(mergeEntities: true)}'\n\nEntities: \n{string.Join("\n", doc.SelectMany(span => span.GetEntities()).Select(e => $"\t{e.Value} [{e.EntityType.Type}]"))}");
+            foreach (var entity in doc.SelectMany(span => span.GetEntities())) {
+                Debug.WriteLine(entity.Value);
+            }
         }
     }
 }
