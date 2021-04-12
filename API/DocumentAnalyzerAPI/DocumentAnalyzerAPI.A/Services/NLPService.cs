@@ -28,7 +28,7 @@ namespace DocumentAnalyzerAPI.A.Services
             _employeeService = employeeService;
         }
 
-        public void SearchEmployees(D.Models.File file, string connectionString, string containerName)
+        public Dictionary<string, int> SearchEmployees(D.Models.File file, string connectionString, string containerName)
         {
             string filePath = GeneratePath(file.Name);
             string extension = Path.GetExtension(file.Name).ToLower();
@@ -49,8 +49,7 @@ namespace DocumentAnalyzerAPI.A.Services
                 text = buffer.ToString();
                 text = text.Replace(Environment.NewLine, " ");
                 text = DeleteRepeatedSpaces(text);
-                SearchEmployeesAux(file, filePath, text);
-                return;
+                return SearchEmployeesAux1(file, filePath, text);
             }
             else if (extension == ".docx")
             {
@@ -58,24 +57,50 @@ namespace DocumentAnalyzerAPI.A.Services
                 doc.LoadFromFile(filePath);
                 text = doc.GetText();
                 doc.Close();
-                SearchEmployeesAux(file, filePath, text);
-                return;
+                return SearchEmployeesAux1(file, filePath, text);
             }
             else
             {
                 text = File.ReadAllText(filePath);
-                SearchEmployeesAux(file, filePath, text);
-                return;
+                return SearchEmployeesAux1(file, filePath, text);
             }
         }
 
-        private void SearchEmployeesAux(D.Models.File file, string filePath, string text)
+        private Dictionary<string, int> SearchEmployeesAux1(D.Models.File file, string filePath, string text)
         {
             text = text.Replace(Environment.NewLine, " ");
             File.Delete(filePath);
             _fileService.AddFile(file);
-            SendStringToNLP(text);
-            return;
+            return SearchEmployeesAux2(text).Result;
+        }
+
+        private async Task<Dictionary<string, int>> SearchEmployeesAux2(string text)
+        {
+            English.Register();
+            var nlp = await Pipeline.ForAsync(Language.English);
+            nlp.Add(await AveragePerceptronEntityRecognizer.FromStoreAsync(language: Language.English, version: Mosaik.Core.Version.Latest, tag: "WikiNER"));
+
+            var doc = new Catalyst.Document(text, Language.English);
+            nlp.ProcessSingle(doc);
+            //PrintDocumentEntities(doc);
+
+            Dictionary<string, int> results = new Dictionary<string, int>();
+            var employees = _employeeService.GetEmployees().Employees;
+            int ocurrences;
+
+            foreach (var employee in employees)
+            {
+                ocurrences = 0;
+                foreach (var entity in doc.SelectMany(span => span.GetEntities()))
+                {
+                    if (employee.Name == entity.Value)
+                    {
+                        ocurrences += 1;
+                    }
+                }
+                results.Add(employee.Name, ocurrences);
+            }
+            return results;
         }
 
         private string DeleteRepeatedSpaces(string text)
@@ -112,31 +137,6 @@ namespace DocumentAnalyzerAPI.A.Services
             BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
             BlobClient blob = container.GetBlobClient(fileName);
             blob.DownloadTo(downloadPath);
-            return;
-        }
-
-        private async void SendStringToNLP(object objText)
-        {
-            string text = (string) objText;
-            English.Register();
-            var nlp = await Pipeline.ForAsync(Language.English);
-            nlp.Add(await AveragePerceptronEntityRecognizer.FromStoreAsync(language: Language.English, version: Mosaik.Core.Version.Latest, tag: "WikiNER"));
-
-            var doc = new Catalyst.Document(text, Language.English);
-            nlp.ProcessSingle(doc);
-           // PrintDocumentEntities(doc);
-
-            var employees = _employeeService.GetEmployees().Employees;
-            foreach (var employee in employees)
-            {
-                foreach (var entity in doc.SelectMany(span => span.GetEntities()))
-                {
-                    if (employee.Name == entity.Value)
-                    {
-                        continue;
-                    }
-                }
-            }
             return;
         }
 

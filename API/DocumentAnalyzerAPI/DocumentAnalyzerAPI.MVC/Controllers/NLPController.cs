@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DocumentAnalyzerAPI.A.Interfaces;
 using DocumentAnalyzerAPI.D.Models;
 using DocumentAnalyzerAPI.MVC.Configuration;
+using DocumentAnalyzerAPI.MVC.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,16 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
     public class NLPController : Controller
     {
         private INLPService _nlpService;
+        private IFileService _fileService;
         private readonly AzureBlobStorageConfig _azureBlobStorageConfig;
+        private readonly MongoFileService _mongoFileService;
 
-        public NLPController(INLPService nlpService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor)
+        public NLPController(INLPService nlpService, IFileService fileService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor, MongoFileService mongoFileService)
         {
             _nlpService = nlpService;
+            _fileService = fileService;
             _azureBlobStorageConfig = azureOptionsMonitor.CurrentValue;
+            _mongoFileService = mongoFileService;
         }
 
         [HttpPost]
@@ -31,7 +36,18 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
         {
             try
             {
-                _nlpService.SearchEmployees(file, _azureBlobStorageConfig.ConectionString, _azureBlobStorageConfig.ContainerName);
+                var result = _nlpService.SearchEmployees(file, _azureBlobStorageConfig.ConectionString, _azureBlobStorageConfig.ContainerName);
+                var files = _fileService.GetFiles().Files;
+                int fileId = -1;
+                foreach (var sFile in files)
+                {
+                    if (sFile.Name == file.Name)
+                    {
+                        fileId = sFile.Id;
+                        break;
+                    }
+                }
+                _mongoFileService.InsertResults(result, fileId);
                 return 1;
             }
             catch

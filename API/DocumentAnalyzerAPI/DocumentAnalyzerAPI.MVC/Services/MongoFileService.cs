@@ -17,6 +17,15 @@ namespace DocumentAnalyzerAPI.MVC.Services
             _mongoFiles = database.GetCollection<MongoFile>(settings.CollectionName);
         }
 
+        public void InsertResults(Dictionary<string, int> result, int fileId)
+        {
+            MongoFile mongoFile = new MongoFile();
+            mongoFile.FileId = fileId;
+            mongoFile.Employees = result;
+            Create(mongoFile);
+            return;
+        }
+
         public List<MongoFile> Get() =>
             _mongoFiles.Find(file => true).ToList();
 

@@ -14,6 +14,7 @@ namespace DocumentAnalyzerAPI.I.D.Repositories
         {
             _context = context;
         }
+
         public IEnumerable<File> GetFiles()
         {
             return _context.Files;

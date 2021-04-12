@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace DocumentAnalyzerAPI.MVC.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class MongoFilesController : ControllerBase
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class MongoController : Controller
     {
         private readonly MongoFileService _mongoFileService;
 
-        public MongoFilesController(MongoFileService fileService)
+        public MongoController(MongoFileService fileService)
         {
             _mongoFileService = fileService;
         }
