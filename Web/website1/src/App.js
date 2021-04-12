@@ -5,8 +5,6 @@ import HomeScreen from "./Components/HomeScreen";
 import UserNamesScreen from "./Components/UserNamesScreen";
 
 function App() {
-  const location = useLocation();
-  console.log(location);
   return (
     <div className="App">
       {location.pathname !== "/" && (
