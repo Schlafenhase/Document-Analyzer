@@ -2,29 +2,33 @@ import React, { useContext, useRef } from 'react';
 import { UploadsViewStateContext } from '../contexts/viewStateContext';
 
 const InputFile: React.FC = () => {
-  const context = useContext(UploadsViewStateContext);
-  const inputFileRef = useRef<HTMLInputElement>(null);
+    const context = useContext(UploadsViewStateContext);
+    const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const uploadFiles = (files: FileList | null) =>
-    files && context.uploadItems(files);
+    /**
+     * Upload files using Upload Service
+     * @param files list of files to upload
+     */
+    const uploadFiles = (files: FileList | null) => {
+        if (files) {
+            context.uploadItems(files);
+            for (let i = 0; i < files.length; i++) {
+                console.log(files[i]);
+            }
+        }
+    }
 
-  const showFileDialog = () =>
-    inputFileRef.current && inputFileRef.current.click();
-
-  return (
+    return (
     <div className="input-file">
-      <input
-        style={{ display: 'none' }}
-        ref={inputFileRef}
-        type="file"
-        multiple={true}
-        onChange={e => uploadFiles(e.target.files)}
-      />
-      <button onClick={() => showFileDialog()}>
-        Click here to Upload File
-      </button>
+        <input
+            ref={inputFileRef}
+            type="file"
+            accept=".pdf, .docx, .txt"
+            multiple={true}
+            onChange={e => uploadFiles(e.target.files)}
+        />
     </div>
-  );
+    );
 };
 
 export default InputFile;

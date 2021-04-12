@@ -7,6 +7,9 @@ const ContainerList: React.FC = () => {
   const context = useContext(SharedViewStateContext);
   const [items, setItems] = useState<ContainerItem[]>([]);
 
+  /**
+   * Get container names in Azure Blob
+   */
   const getContainersEffect = () => {
     const sub = context.containers$
       .pipe(tap(items => setItems(items)))
@@ -21,7 +24,6 @@ const ContainerList: React.FC = () => {
   return (
     <div className="container-list">
       <h3>Containers</h3>
-
       {items.map((item, i) => (
         <div key={i}>
           {item.name}

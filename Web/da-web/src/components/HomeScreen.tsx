@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import Button from "./UI/Button";
 import Table from "./UI/Table";
@@ -9,6 +9,9 @@ import ItemsList from "../azure-storage/components/ItemsList";
 import ItemsUploaded from "../azure-storage/components/ItemsUploaded";
 import ItemsDownloaded from "../azure-storage/components/ItemsDownloaded";
 import ItemsDeleted from "../azure-storage/components/ItemsDeleted";
+import {SharedViewStateContext, UploadsViewStateContext} from "../azure-storage/contexts/viewStateContext";
+import {tap} from "rxjs/operators";
+import {ContainerItem} from "@azure/storage-blob";
 
 const DATA = [
     {
@@ -41,6 +44,12 @@ const Div = styled.div`
 
 const HomeScreen = () => {
     const [data, setData] = useState(DATA);
+    const viewContext = useContext(SharedViewStateContext);
+
+    useEffect(() => {
+        viewContext.getContainerItems("dcanalyzerblob")
+        },
+        [])
 
     const insert = () => {
         /*const newItem = {
@@ -63,7 +72,7 @@ const HomeScreen = () => {
                     return data;
                 }
                 // @ts-ignore
-                newItem["Progreso de susbida"] += 10;
+                newItem["Progreso de subida"] += 10;
                 newData[index] = newItem;
                 return newData;
             });
@@ -74,20 +83,21 @@ const HomeScreen = () => {
         <Div>
             <Table data={data}/>
             <div>
-                <input type="file"/>
-                <Button onClick={insert}>Agregar</Button>
+                <InputFile/>
             </div>
+
+            <hr/><hr/>
+            <h2>Debug Components - Delete Them Later:</h2>
             <ContainerList/>
             <hr/>
             <SelectedContainer className="container"/>
-            <InputFile/>
             <ItemsList/>
+
             <div className="item-details">
                 <ItemsUploaded/>
                 <ItemsDownloaded/>
                 <ItemsDeleted/>
             </div>
-            <SelectedContainer/>
         </Div>
     );
 };

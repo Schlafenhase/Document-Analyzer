@@ -20,7 +20,7 @@ const SelectedContainer: React.FC<React.HTMLProps<HTMLDivElement>> = ({
 
   return containerName ? (
     <div {...rest}>
-      <h2>Container Files: {containerName}</h2>
+      <h3>Container Files: {containerName}</h3>
       {children}
     </div>
   ) : (
