@@ -8,8 +8,6 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.8.1" />
     <PackageReference Include="Catalyst" Version="1.0.16767" />
     <PackageReference Include="Catalyst.Models.English" Version="1.0.16625" />
-    <PackageReference Include="MongoDB.Bson" Version="2.12.2" />
-    <PackageReference Include="MongoDB.Driver" Version="2.12.2" />
     <PackageReference Include="Spire.Doc" Version="9.4.1" />
     <PackageReference Include="Spire.PDF" Version="7.3.3" />
   </ItemGroup>
