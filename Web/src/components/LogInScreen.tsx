@@ -4,6 +4,8 @@ import styled from "styled-components";
 import login from "../assets/login.jpg";
 import Button from "./UI/Button";
 import Input from "./UI/Input";
+import logo from '../assets/da-logo.svg';
+import "../styles/css/App.css"
 
 const Div = styled.div`
   overflow: hidden;
@@ -32,12 +34,17 @@ const Container = styled.div`
   input {
     margin-bottom: 16px;
   }
+  
+  .logo {
+    
+  }
 `;
 
 const LogInScreen = () => {
     return (
         <Div>
             <Container>
+                <img src={logo} id="mainLogo"/>
                 <h1>¡Bienvenido a Document Analyzer!</h1>
                 <Input label="Nombre de usuario"/>
                 <Input type="password" label="Contraseña"/>

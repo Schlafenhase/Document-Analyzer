@@ -12,3 +12,10 @@ h2,
 p,
 a {
   margin: 0; }
+
+div {
+  color: black; }
+
+#mainLogo {
+  height: 150px;
+  margin-bottom: 20px; }
