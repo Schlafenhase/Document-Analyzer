@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         node-version: [15.x]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
 
     steps:
     - name: Checkout repository
@@ -79,7 +79,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 3.1.x
       
     - name: Clean
       run: dotnet clean && dotnet nuget locals all --clear
@@ -110,7 +110,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 3.1.x
         
     - name: Clean
       run: dotnet clean && dotnet nuget locals all --clear
