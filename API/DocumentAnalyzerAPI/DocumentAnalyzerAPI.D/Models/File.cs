@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DocumentAnalyzerAPI.D.Models
+﻿namespace DocumentAnalyzerAPI.D.Models
 {
     public class File
     {
+        /// <summary>
+        /// Atributes of File
+        /// </summary>
         public int Id { get; set; }
         public string Name { get; set; }
     }

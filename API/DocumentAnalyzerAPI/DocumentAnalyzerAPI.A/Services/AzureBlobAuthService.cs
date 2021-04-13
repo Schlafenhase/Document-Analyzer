@@ -2,13 +2,30 @@
 using Azure.Storage.Sas;
 using DocumentAnalyzerAPI.A.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DocumentAnalyzerAPI.A.Services
 {
     public class AzureBlobAuthService : IAzureBlobAuthService
     {
+        /// <summary>
+        /// Constructor of AzureBlobAuthService
+        /// </summary>
+        public AzureBlobAuthService()
+        {
+        }
+
+        /// <summary>
+        /// Method that generates the SAS token for Azure Blob Storage authentication
+        /// </summary>
+        /// <param name="key">
+        /// Azure account key
+        /// </param>
+        /// <param name="accountName">
+        /// Azure account name
+        /// </param>
+        /// <returns>
+        /// SAS key
+        /// </returns>
         public string GenerateSAS(string key, string accountName)
         {
             var sharedKeyCredentials = new StorageSharedKeyCredential(accountName, key);
