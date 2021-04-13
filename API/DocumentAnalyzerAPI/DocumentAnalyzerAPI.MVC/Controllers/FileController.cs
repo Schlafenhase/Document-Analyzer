@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DocumentAnalyzerAPI.A.Interfaces;
+﻿using DocumentAnalyzerAPI.A.Interfaces;
 using DocumentAnalyzerAPI.A.ViewModels;
-using DocumentAnalyzerAPI.D.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,25 +10,33 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FileController : Controller
     {
+        /// <summary>
+        /// Atribute that stores the file service
+        /// </summary>
         private IFileService _fileService;
 
+        /// <summary>
+        /// Constructor of FileController
+        /// </summary>
+        /// <param name="fileService">
+        /// File service
+        /// </param>
         public FileController(IFileService fileService)
         {
             _fileService = fileService;
         }
 
+        /// <summary>
+        /// Method that searches all the files in the database
+        /// </summary>
+        /// <returns>
+        /// List with all the database files
+        /// </returns>
         [Route("Files")]
         [HttpGet]
         public FileViewModel GetFiles()
         {
             return _fileService.GetFiles();
-        }
-
-        [HttpPost]
-        public void AddFile([FromBody] File file)
-        {
-            _fileService.AddFile(file);
-            return;
         }
     }
 }

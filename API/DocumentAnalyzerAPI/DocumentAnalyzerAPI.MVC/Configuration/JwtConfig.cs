@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DocumentAnalyzerAPI.MVC.Configuration
+﻿namespace DocumentAnalyzerAPI.MVC.Configuration
 {
     public class JwtConfig
     {
+        /// <summary>
+        /// Atribute of JwtConfig
+        /// </summary>
         public string Secret { get; set; }
     }
 }

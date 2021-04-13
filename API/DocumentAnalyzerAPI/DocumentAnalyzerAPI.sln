@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.A", "Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentAnalyzerAPI.I.IoC", "DocumentAnalyzerAPI.I.IoC\DocumentAnalyzerAPI.I.IoC.csproj", "{4180A504-88F9-429C-8570-F37B57521CE9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocumentAnalyzerAPI.Test", "DocumentAnalyzerAPI.Test", "{0331A4B2-F1E9-4887-A02D-D6CBD63948CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentAnalyzerAPI.T", "DocumentAnalyzerAPI.T\DocumentAnalyzerAPI.T.csproj", "{1902E6C7-543E-47DE-95F3-3032C6CFFA61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,10 @@ Global
 		{4180A504-88F9-429C-8570-F37B57521CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4180A504-88F9-429C-8570-F37B57521CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4180A504-88F9-429C-8570-F37B57521CE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1902E6C7-543E-47DE-95F3-3032C6CFFA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1902E6C7-543E-47DE-95F3-3032C6CFFA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1902E6C7-543E-47DE-95F3-3032C6CFFA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1902E6C7-543E-47DE-95F3-3032C6CFFA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,7 @@ Global
 		{C5F1C933-9B7D-4E2C-9B1D-266CD466F396} = {BC872A74-24B2-4A07-AEBD-27980E8EF69F}
 		{A1143F8C-843C-41C0-BDFD-D88689ABD250} = {F58A17B3-671B-4DE7-974A-01C3C2ECC4D1}
 		{4180A504-88F9-429C-8570-F37B57521CE9} = {061A9FB4-F2F9-499E-99B8-47E538904B17}
+		{1902E6C7-543E-47DE-95F3-3032C6CFFA61} = {0331A4B2-F1E9-4887-A02D-D6CBD63948CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {401B37D4-1084-45F4-A090-1E7173582A3F}
