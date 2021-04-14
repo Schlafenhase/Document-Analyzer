@@ -293,3 +293,5 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
+# Local Netlify folder
+.netlify

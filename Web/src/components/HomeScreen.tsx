@@ -15,38 +15,61 @@ import {
 } from "../azure-storage/contexts/viewStateContext";
 import { tap } from "rxjs/operators";
 import { ContainerItem } from "@azure/storage-blob";
+import FilesBg from "../assets/FilesBg.jpg";
+import { Container } from "./UI/Container";
+import Button from "./UI/Button";
+import axios from "axios";
+import { BaseURL } from "../constants";
 
-const DATA = [
-  {
-    "Nombre del archivo": "Doc1",
-    "Tipo de archivo": "PDF",
-    "Fecha de subida": "12/10/2020",
-    "Progreso de subida": "Listo",
-  },
-  {
-    "Nombre del archivo": "Doc1.1",
-    "Tipo de archivo": "Doc",
-    "Fecha de subida": "30/10/2020",
-    "Progreso de subida": "Listo",
-  },
-  {
-    "Nombre del archivo": "Minuta",
-    "Tipo de archivo": "TXT",
-    "Fecha de subida": "12/3/2021",
-    "Progreso de subida": 50,
-  },
-];
+// const DATA = [
+//   {
+//     "Nombre del archivo": "Doc1",
+//     "Fecha de subida": "12/10/2020",
+//     "Progreso de subida": "Listo",
+//   },
+//   {
+//     "Nombre del archivo": "Doc1.1",
+//     "Fecha de subida": "30/10/2020",
+//     "Progreso de subida": "Listo",
+//   },
+//   {
+//     "Nombre del archivo": "Minuta",
+//     "Fecha de subida": "12/3/2021",
+//     "Progreso de subida": 50,
+//   },
+// ];
 
 const Div = styled.div`
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
   height: 100%;
-  padding: 16px 32px;
+  padding: 32px;
+
+  background-image: url(${FilesBg});
+  background-size: cover;
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const HomeScreen = (props: any) => {
-  const [data, setData] = useState(DATA);
+  const [data, setData] = useState([]);
+
+  const getFiles = async () => {
+    const response = await axios.get(BaseURL + "/Api/File/Files", {
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+    });
+    setData(response.data.files);
+    console.log(response.data.files);
+  };
+
+  useEffect(() => {
+    getFiles();
+  }, []);
+
   const viewContext = useContext(SharedViewStateContext);
 
   useEffect(() => {
@@ -61,46 +84,52 @@ const HomeScreen = (props: any) => {
           "Progreso de subida": 0,
         };
         setData([...data, newItem]);*/
-
-    const id = setInterval(() => {
-      setData((data) => {
-        const newData = [...data];
-        const index = data.findIndex(
-          (el) => el["Nombre del archivo"] === "Minuta"
-        );
-        const newItem = { ...data[index] };
-        if (newItem["Progreso de subida"] >= 100) {
-          clearInterval(id);
-          return data;
-        }
-        // @ts-ignore
-        newItem["Progreso de subida"] += 10;
-        newData[index] = newItem;
-        return newData;
-      });
-    }, 1000);
+    // const id = setInterval(() => {
+    //   setData((data) => {
+    //     const newData = [...data];
+    //     const index = data.findIndex(
+    //       (el) => el["Nombre del archivo"] === "Minuta"
+    //     );
+    //     const newItem = { ...data[index] };
+    //     if (newItem["Progreso de subida"] >= 100) {
+    //       clearInterval(id);
+    //       return data;
+    //     }
+    //     // @ts-ignore
+    //     newItem["Progreso de subida"] += 10;
+    //     newData[index] = newItem;
+    //     return newData;
+    //   });
+    // }, 1000);
   };
 
   return (
     <Div>
-      <Table data={data} />
-      <div>
-        <InputFile />
-      </div>
+      <Container>
+        <Row>
+          <h1>Archivos guardados</h1>
+          <Button onClick={getFiles}>Refrescar</Button>
+        </Row>
+        <Table data={data} />
 
-      <hr />
-      <hr />
-      <h2>Debug Components - Delete Them Later:</h2>
-      <ContainerList />
-      <hr />
-      <SelectedContainer className="container" />
-      <ItemsList />
+        {/* <div>
+          <InputFile />
+        </div>
 
-      <div className="item-details">
-        <ItemsUploaded />
-        <ItemsDownloaded />
-        <ItemsDeleted />
-      </div>
+        <hr />
+        <hr />
+        <h2>Debug Components - Delete Them Later:</h2>
+        <ContainerList />
+        <hr />
+        <SelectedContainer className="container" />
+        <ItemsList />
+
+        <div className="item-details">
+          <ItemsUploaded />
+          <ItemsDownloaded />
+          <ItemsDeleted />
+        </div> */}
+      </Container>
     </Div>
   );
 };

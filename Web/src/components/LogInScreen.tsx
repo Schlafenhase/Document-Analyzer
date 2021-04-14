@@ -5,6 +5,7 @@ import login from "../assets/login.jpg";
 import Button from "./UI/Button";
 import Input from "./UI/Input";
 import axios from "axios";
+import { BaseURL } from "../constants";
 
 const Div = styled.div`
   overflow: hidden;
@@ -36,20 +37,16 @@ const Container = styled.div`
 `;
 
 const LogInScreen = (props: any) => {
-  const urlBaseState = useState("");
   const nameState = useState("");
   const passwordState = useState("");
   const history = useHistory();
 
   const login = async () => {
     try {
-      const response = await axios.post(
-        urlBaseState[0] + "/Api/AuthManagement/Login",
-        {
-          email: nameState[0],
-          password: passwordState[0],
-        }
-      );
+      const response = await axios.post(BaseURL + "/Api/AuthManagement/Login", {
+        email: nameState[0],
+        password: passwordState[0],
+      });
       props.setToken(response.data.token);
       history.push("/home");
     } catch (error) {
@@ -60,17 +57,6 @@ const LogInScreen = (props: any) => {
   return (
     <Div>
       <Container>
-        <Input
-          label="URL BASE"
-          state={[
-            urlBaseState[0],
-            (text: any) => {
-              urlBaseState[1](text);
-              props.setBaseUrl(text);
-            },
-          ]}
-        />
-
         <h1>¡Bienvenido a Document Analyzer!</h1>
         <Input label="Nombre de usuario" state={nameState} />
         <Input type="password" label="Contraseña" state={passwordState} />

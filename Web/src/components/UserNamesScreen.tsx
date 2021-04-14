@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Button from "./UI/Button";
 import Table from "./UI/Table";
 import axios from "axios";
-import homeBg from "../assets/homeBg.jpg";
+import UsersBg from "../assets/UsersBg.jpg";
+import { Container } from "./UI/Container";
+import { BaseURL } from "../constants";
 
 const DATA = [
   {
@@ -25,19 +27,8 @@ const Div = styled.div`
   height: 100%;
   padding: 32px;
 
-  background-image: url(${homeBg});
+  background-image: url(${UsersBg});
   background-size: cover;
-`;
-
-const Container = styled.div`
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  max-width: 840px;
-  margin: auto;
-  border-radius: 8px;
-  padding: 8px;
-  height: 100%;
-  box-sizing: border-box;
 `;
 
 const Row = styled.div`
@@ -50,14 +41,11 @@ const UserNamesScreen = (props: any) => {
   const [name, setName] = useState("");
 
   const getEmployees = async () => {
-    const response = await axios.get(
-      props.baseUrl + "/Api/Employee/Employees",
-      {
-        headers: {
-          Authorization: "Bearer " + props.token,
-        },
-      }
-    );
+    const response = await axios.get(BaseURL + "/Api/Employee/Employees", {
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+    });
     setData(response.data.employees);
   };
 
@@ -67,7 +55,7 @@ const UserNamesScreen = (props: any) => {
 
   const postEmployee = async () => {
     const response = await axios.post(
-      props.baseUrl + "/Api/Employee",
+      BaseURL + "/Api/Employee",
       { name: name },
       {
         headers: {
