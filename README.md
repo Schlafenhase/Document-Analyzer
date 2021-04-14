@@ -1,6 +1,6 @@
 # Document Analyzer 📄🔍
 
-<p align=center><img src="Docs/readme-images/banner-second-wave.png" width="fit-content"></p>
+<p align=center><img src="Docs/readme-images/da-banner.png" width="fit-content"></p>
 
 Document Analyzer is a three-layered app to process and analyze company documents for sensitive or specific strings of information. It features a **React** website, **ASP .NET Core** as a REST API and a mixture of databases with **Microsoft SQL Server**, **MongoDB** & **Azure Blob Storage**.
 
@@ -134,7 +134,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 * Isaac Ramírez - [GitHub](https://github.com/IsaacSNK)
 
 <p align="center">
-  <img src="https://s3.amazonaws.com/madewithangular.com/img/500.png" height="80">
   <img src="Docs/readme-images/schlafenhase-blue-logo.png" height="80">                                                                           
 </p>
 <p align="center">This project was made with academical purposes. Schlafenhase. 2021</p
