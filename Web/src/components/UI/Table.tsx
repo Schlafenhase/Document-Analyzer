@@ -21,33 +21,33 @@ const Cell = styled.div`
 `;
 
 const Table = (props: any) => {
-    let items = null;
-    let headers = null;
-    if (props.data) {
-        items = props.data.map((el: any) => (
-            <Row>
-                {Object.keys(el).map((key) => (
-                    <Cell>{el[key]}</Cell>
-                ))}
-            </Row>
-        ));
-        headers = (
-            <Row>
-                {Object.keys(props.data[0]).map((el) => (
-                    <Cell>
-                        <h3 style={{ margin: 0, color: "#1C448E" }}>{el}</h3>
-                    </Cell>
-                ))}
-            </Row>
-        );
-    }
-
-    return (
-        <Div>
-            {headers}
-            {items}
-        </Div>
+  let items = null;
+  let headers = null;
+  if (props.data && props.data.length > 0) {
+    items = props.data.map((el: any) => (
+      <Row>
+        {Object.keys(el).map((key) => (
+          <Cell>{el[key]}</Cell>
+        ))}
+      </Row>
+    ));
+    headers = (
+      <Row>
+        {Object.keys(props.data[0]).map((el) => (
+          <Cell>
+            <h3 style={{ margin: 0, color: "#1C448E" }}>{el}</h3>
+          </Cell>
+        ))}
+      </Row>
     );
+  }
+
+  return (
+    <Div>
+      {headers}
+      {items}
+    </Div>
+  );
 };
 
 export default Table;

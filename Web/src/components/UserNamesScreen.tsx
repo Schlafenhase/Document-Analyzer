@@ -1,22 +1,23 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "./UI/Button";
 import Table from "./UI/Table";
+import axios from "axios";
 
-const DATA = [
-    {
-        ID: 1,
-        Nombre: "Francisco Solano",
-    },
-    {
-        ID: 2,
-        Nombre: "Pancho Gómez",
-    },
-    {
-        ID: 3,
-        Nombre: "Pepito",
-    },
-];
+// const DATA = [
+//   {
+//     ID: 1,
+//     Nombre: "Francisco Solano",
+//   },
+//   {
+//     ID: 2,
+//     Nombre: "Pancho Gómez",
+//   },
+//   {
+//     ID: 3,
+//     Nombre: "Pepito",
+//   },
+// ];
 
 const Div = styled.div`
   display: flex;
@@ -26,29 +27,66 @@ const Div = styled.div`
   padding: 16px 32px;
 `;
 
-const UserNamesScreen = () => {
-    const [data, setData] = useState(DATA);
-    const [name, setName] = useState("");
+const UserNamesScreen = (props: any) => {
+  const [data, setData] = useState([]);
+  const [name, setName] = useState("");
 
-    const insert = () => {
-        const newUser = { ID: data[data.length - 1].ID + 1, Nombre: name };
-        setData([...data, newUser]);
-    };
-
-    return (
-        <Div>
-            <Table data={data}/>
-            <div>
-                <input
-                placeholder="Nuevo usuario"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                />
-                <Button onClick={insert}>Agregar</Button>
-            </div>
-        </Div>
+  const getEmployees = async () => {
+    const response = await axios.get(
+      props.baseUrl + "/Api/Employee/Employees",
+      {
+        headers: {
+          Authorization: "Bearer " + props.token,
+        },
+      }
     );
+    setData(response.data.employees);
+  };
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  const postEmployee = async () => {
+    const response = await axios.post(
+      props.baseUrl + "/Api/Employee",
+      { name: name },
+      {
+        headers: {
+          Authorization: "Bearer " + props.token,
+        },
+      }
+    );
+    if (response.status === 200) {
+      alert("Nombre agregado correctamente");
+      setName("");
+      setTimeout(getEmployees, 1000);
+    } else {
+      alert("Error en el servidor");
+    }
+  };
+
+  return (
+    <Div>
+      <Button
+        onClick={() => {
+          getEmployees();
+        }}
+      >
+        Refrescar
+      </Button>
+      <Table data={data} />
+      <div>
+        <input
+          placeholder="Nuevo usuario"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Button onClick={postEmployee}>Agregar</Button>
+      </div>
+    </Div>
+  );
 };
 
 export default UserNamesScreen;

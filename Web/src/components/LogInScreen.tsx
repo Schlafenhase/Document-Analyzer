@@ -1,9 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import login from "../assets/login.jpg";
 import Button from "./UI/Button";
 import Input from "./UI/Input";
+import axios from "axios";
 
 const Div = styled.div`
   overflow: hidden;
@@ -34,19 +35,49 @@ const Container = styled.div`
   }
 `;
 
-const LogInScreen = () => {
-    return (
-        <Div>
-            <Container>
-                <h1>¡Bienvenido a Document Analyzer!</h1>
-                <Input label="Nombre de usuario"/>
-                <Input type="password" label="Contraseña"/>
-                <Link to="/home">
-                    <Button style={{ width: "100%" }}>Ingresar</Button>
-                </Link>
-            </Container>
-        </Div>
-    );
+const LogInScreen = (props: any) => {
+  const urlBaseState = useState("");
+  const nameState = useState("");
+  const passwordState = useState("");
+  const history = useHistory();
+
+  const login = async () => {
+    try {
+      const response = await axios.post(
+        urlBaseState[0] + "/Api/AuthManagement/Login",
+        {
+          email: nameState[0],
+          password: passwordState[0],
+        }
+      );
+      props.setToken(response.data.token);
+      history.push("/home");
+    } catch (error) {
+      alert("Contraseña o usuario incorrecto");
+    }
+  };
+
+  return (
+    <Div>
+      <Container>
+        <Input
+          label="URL BASE"
+          state={[
+            urlBaseState[0],
+            (text: any) => {
+              urlBaseState[1](text);
+              props.setBaseUrl(text);
+            },
+          ]}
+        />
+
+        <h1>¡Bienvenido a Document Analyzer!</h1>
+        <Input label="Nombre de usuario" state={nameState} />
+        <Input type="password" label="Contraseña" state={passwordState} />
+        <Button onClick={login}>Ingresar</Button>
+      </Container>
+    </Div>
+  );
 };
 
 export default LogInScreen;
