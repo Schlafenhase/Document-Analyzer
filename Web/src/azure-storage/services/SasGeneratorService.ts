@@ -6,7 +6,7 @@ import { BaseURL } from "../../constants";
 
 export class SasGeneratorService {
     getSasToken(): Observable<BlobStorageRequest> {
-        const response = axios.get(
+        const response = axios.get<BlobStorageRequest>(
             BaseURL + "/Api/AzureBlobAuth",
             {
                 headers: {

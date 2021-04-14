@@ -16,7 +16,7 @@ const App = () => {
           <Route path="/" exact>
             <LogInScreen setToken={setToken} />
           </Route>
-          {(true || token !== "") && [
+          {(token !== "") && [
             <Route path="/home">
               <HeaderBar />
               <HomeScreen token={token} />

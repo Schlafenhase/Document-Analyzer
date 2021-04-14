@@ -47,7 +47,9 @@ const LogInScreen = (props: any) => {
         email: nameState[0],
         password: passwordState[0],
       });
-      props.setToken(response.data.token);
+      const token = response.data.token;
+      props.setToken(token);
+      localStorage.setItem('token', token)
       history.push("/home");
     } catch (error) {
       alert("Contraseña o usuario incorrecto");
