@@ -58,9 +58,10 @@ const HomeScreen = (props: any) => {
   const [fileData, setDataFile] = useState([]);
 
   const getFiles = async () => {
+    const token = localStorage.getItem('token');
     const response = await axios.get(BaseURL + "/Api/File/Files", {
       headers: {
-        Authorization: "Bearer " + props.token,
+        Authorization: "Bearer " + token,
       },
     });
     setData(response.data.files);
@@ -72,9 +73,10 @@ const HomeScreen = (props: any) => {
   }, []);
 
   const getDetail = async (file: any) => {
+    const token = localStorage.getItem('token');
     const response = await axios.get(BaseURL + "/Api/Mongo/" + file.id, {
       headers: {
-        Authorization: "Bearer " + props.token,
+        Authorization: "Bearer " + token,
       },
     });
     console.log(response.data);
@@ -135,7 +137,7 @@ const HomeScreen = (props: any) => {
           <p>Seleccione un nombre para ver detalles</p>
         )}
 
-        {/* <div>
+        <div>
           <InputFile />
         </div>
 
@@ -151,7 +153,7 @@ const HomeScreen = (props: any) => {
           <ItemsUploaded />
           <ItemsDownloaded />
           <ItemsDeleted />
-        </div> */}
+        </div>
       </Container>
     </Div>
   );

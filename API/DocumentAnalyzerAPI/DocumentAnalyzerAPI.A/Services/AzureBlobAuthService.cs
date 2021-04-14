@@ -33,7 +33,7 @@ namespace DocumentAnalyzerAPI.A.Services
             {
                 StartsOn = DateTimeOffset.UtcNow,
                 ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(5),
-                Services = AccountSasServices.Blobs,
+                Services = AccountSasServices.All,
                 ResourceTypes = AccountSasResourceTypes.All,
                 Protocol = SasProtocol.Https
             };

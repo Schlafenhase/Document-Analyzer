@@ -41,9 +41,10 @@ const UserNamesScreen = (props: any) => {
   const [name, setName] = useState("");
 
   const getEmployees = async () => {
+    const token = localStorage.getItem('token');
     const response = await axios.get(BaseURL + "/Api/Employee/Employees", {
       headers: {
-        Authorization: "Bearer " + props.token,
+        Authorization: "Bearer " + token,
       },
     });
     setData(response.data.employees);
@@ -54,12 +55,13 @@ const UserNamesScreen = (props: any) => {
   }, []);
 
   const postEmployee = async () => {
+    const token = localStorage.getItem('token');
     const response = await axios.post(
       BaseURL + "/Api/Employee",
       { name: name },
       {
         headers: {
-          Authorization: "Bearer " + props.token,
+          Authorization: "Bearer " + token,
         },
       }
     );
