@@ -11,8 +11,8 @@ const StyledButton = styled.button`
   cursor: pointer;
 `;
 
-const Button = (props) => {
-  return <StyledButton {...props}>{props.children}</StyledButton>;
+const Button = (props: any) => {
+    return <StyledButton {...props}>{props.children}</StyledButton>;
 };
 
 export default Button;
