@@ -33,7 +33,10 @@ const Table = (props: any) => {
   let headers = null;
   if (props.data && props.data.length > 0) {
     items = props.data.map((el: any, i: number) => (
-      <Row style={{ backgroundColor: i % 2 === 0 ? "#eef0f2" : "unset" }}>
+      <Row
+        onClick={() => props.onClickItem(el)}
+        style={{ backgroundColor: i % 2 === 0 ? "#eef0f2" : "unset" }}
+      >
         {Object.keys(el).map((key) => (
           <Cell>{el[key]}</Cell>
         ))}

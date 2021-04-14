@@ -55,6 +55,7 @@ const Row = styled.div`
 
 const HomeScreen = (props: any) => {
   const [data, setData] = useState([]);
+  const [fileData, setDataFile] = useState([]);
 
   const getFiles = async () => {
     const response = await axios.get(BaseURL + "/Api/File/Files", {
@@ -69,6 +70,22 @@ const HomeScreen = (props: any) => {
   useEffect(() => {
     getFiles();
   }, []);
+
+  const getDetail = async (file: any) => {
+    const response = await axios.get(BaseURL + "/Api/Mongo/" + file.id, {
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+    });
+    console.log(response.data);
+    const dataFile: never[] = Object.keys(response.data.employees).map(
+      (key) => ({
+        name: key,
+        count: response.data.employees[key],
+      })
+    ) as any;
+    setDataFile(dataFile);
+  };
 
   const viewContext = useContext(SharedViewStateContext);
 
@@ -110,7 +127,13 @@ const HomeScreen = (props: any) => {
           <h1>Archivos guardados</h1>
           <Button onClick={getFiles}>Refrescar</Button>
         </Row>
-        <Table data={data} />
+        <Table onClickItem={getDetail} data={data} />
+
+        {fileData.length > 0 ? (
+          <Table data={fileData} />
+        ) : (
+          <p>Seleccione un nombre para ver detalles</p>
+        )}
 
         {/* <div>
           <InputFile />

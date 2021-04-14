@@ -7,20 +7,20 @@ import UsersBg from "../assets/UsersBg.jpg";
 import { Container } from "./UI/Container";
 import { BaseURL } from "../constants";
 
-const DATA = [
-  {
-    ID: 1,
-    Nombre: "Francisco Solano",
-  },
-  {
-    ID: 2,
-    Nombre: "Pancho Gómez",
-  },
-  {
-    ID: 3,
-    Nombre: "Pepito",
-  },
-];
+// const DATA = [
+//   {
+//     ID: 1,
+//     Nombre: "Francisco Solano",
+//   },
+//   {
+//     ID: 2,
+//     Nombre: "Pancho Gómez",
+//   },
+//   {
+//     ID: 3,
+//     Nombre: "Pepito",
+//   },
+// ];
 
 const Div = styled.div`
   box-sizing: border-box;
@@ -37,7 +37,7 @@ const Row = styled.div`
 `;
 
 const UserNamesScreen = (props: any) => {
-  const [data, setData] = useState(DATA);
+  const [data, setData] = useState([]);
   const [name, setName] = useState("");
 
   const getEmployees = async () => {

@@ -21,7 +21,7 @@ const HeaderBar = (props: any) => {
     <Div>
       <Link to="/">Cerrar sesión</Link>
       <Link to="/home">Documentos</Link>
-      <Link to="/usernames">Nombres de usuarios</Link>
+      <Link to="/usernames">Nombres de empleados</Link>
     </Div>
   );
 };
