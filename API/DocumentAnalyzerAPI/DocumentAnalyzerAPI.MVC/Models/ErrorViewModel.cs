@@ -1,5 +1,3 @@
-using System;
-
 namespace DocumentAnalyzerAPI.MVC.Models
 {
     public class ErrorViewModel

@@ -18,15 +18,36 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
     [Route("Api/[controller]")]
     public class AuthManagementController : Controller
     {
+        /// <summary>
+        /// Atributes that store the jwt authentication configuration and the microsoft identity authentication configuration
+        /// </summary>
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JwtConfig _jwtConfig;
 
+        /// <summary>
+        /// Constructor of the AuthManagementController
+        /// </summary>
+        /// <param name="userManager">
+        /// Microsoft Identity Authentication Configuration
+        /// </param>
+        /// <param name="optionsMonitor">
+        /// Jwt Authentication Configuration
+        /// </param>
         public AuthManagementController(UserManager<IdentityUser> userManager, IOptionsMonitor<JwtConfig> optionsMonitor)
         {
             _userManager = userManager;
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
+        /// <summary>
+        /// Method that handles user registrarion
+        /// </summary>
+        /// <param name="user">
+        /// User with username, email and password
+        /// </param>
+        /// <returns>
+        /// Token generated for authentication
+        /// </returns>
         [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto user)
@@ -80,6 +101,15 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
             });
         }
 
+        /// <summary>
+        /// Method that handles user login
+        /// </summary>
+        /// <param name="user">
+        /// User with email and password
+        /// </param>
+        /// <returns>
+        /// Token generated for authentication
+        /// </returns>
         [Route("Login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest user)
@@ -133,6 +163,15 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
             });
         }
 
+        /// <summary>
+        /// Method that creates the jwt token
+        /// </summary>
+        /// <param name="user">
+        /// User with email and password
+        /// </param>
+        /// <returns>
+        /// String with the token generated
+        /// </returns>
         private string GenerateJwtToken(IdentityUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
