@@ -55,38 +55,50 @@ const Row = styled.div`
 
 const HomeScreen = (props: any) => {
   const [data, setData] = useState([]);
-  const [fileData, setDataFile] = useState([]);
+  const [fileData, setDataFile]: any = useState({});
+  const [status, setStatus]: any = useState();
 
   const getFiles = async () => {
-    const token = localStorage.getItem('token');
     const response = await axios.get(BaseURL + "/Api/File/Files", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + props.token,
       },
     });
     setData(response.data.files);
-    console.log(response.data.files);
   };
 
   useEffect(() => {
-    getFiles();
-  }, []);
+    if (props.token) getFiles();
+  }, [props.token]);
 
   const getDetail = async (file: any) => {
-    const token = localStorage.getItem('token');
     const response = await axios.get(BaseURL + "/Api/Mongo/" + file.id, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + props.token,
       },
     });
+    const dataFile = Object.keys(response.data.employees).map((key) => ({
+      name: key,
+      count: response.data.employees[key],
+    })) as any;
+    setDataFile({ title: file.name, data: dataFile });
+  };
+
+  const uploadFile = async (name: String) => {
+    setStatus("procesando NLP...");
+    const response = await axios.post(
+      BaseURL + "/Api/NLP",
+      { name },
+      {
+        headers: {
+          Authorization: "Bearer " + props.token,
+        },
+      }
+    );
     console.log(response.data);
-    const dataFile: never[] = Object.keys(response.data.employees).map(
-      (key) => ({
-        name: key,
-        count: response.data.employees[key],
-      })
-    ) as any;
-    setDataFile(dataFile);
+    setStatus("Completo");
+    setTimeout(getFiles, 1000);
+    setTimeout(setStatus, 2000);
   };
 
   const viewContext = useContext(SharedViewStateContext);
@@ -95,32 +107,9 @@ const HomeScreen = (props: any) => {
     viewContext.getContainerItems("dcanalyzerblob");
   }, []);
 
-  const insert = () => {
-    /*const newItem = {
-          "Nombre del archivo": "NUEVO",
-          "Tipo de archivo": "TXT",
-          "Fecha de subida": new Date().toISOString(),
-          "Progreso de subida": 0,
-        };
-        setData([...data, newItem]);*/
-    // const id = setInterval(() => {
-    //   setData((data) => {
-    //     const newData = [...data];
-    //     const index = data.findIndex(
-    //       (el) => el["Nombre del archivo"] === "Minuta"
-    //     );
-    //     const newItem = { ...data[index] };
-    //     if (newItem["Progreso de subida"] >= 100) {
-    //       clearInterval(id);
-    //       return data;
-    //     }
-    //     // @ts-ignore
-    //     newItem["Progreso de subida"] += 10;
-    //     newData[index] = newItem;
-    //     return newData;
-    //   });
-    // }, 1000);
-  };
+  if (!props.token) {
+    return null;
+  }
 
   return (
     <Div>
@@ -131,29 +120,22 @@ const HomeScreen = (props: any) => {
         </Row>
         <Table onClickItem={getDetail} data={data} />
 
-        {fileData.length > 0 ? (
-          <Table data={fileData} />
+        {status ? (
+          <p>STATUS: {status}</p>
+        ) : (
+          <InputFile
+            start={() => setStatus("subiendo a Azure...")}
+            uploaded={uploadFile}
+          />
+        )}
+
+        {fileData.title ? (
+          [<h2>{fileData.title}</h2>, <Table data={fileData.data} />]
         ) : (
           <p>Seleccione un nombre para ver detalles</p>
         )}
 
-        <div>
-          <InputFile />
-        </div>
-
-        <hr />
-        <hr />
-        <h2>Debug Components - Delete Them Later:</h2>
         <ContainerList />
-        <hr />
-        <SelectedContainer className="container" />
-        <ItemsList />
-
-        <div className="item-details">
-          <ItemsUploaded />
-          <ItemsDownloaded />
-          <ItemsDeleted />
-        </div>
       </Container>
     </Div>
   );

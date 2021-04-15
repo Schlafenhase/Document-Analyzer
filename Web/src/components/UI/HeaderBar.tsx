@@ -19,7 +19,15 @@ const Div = styled.nav`
 const HeaderBar = (props: any) => {
   return (
     <Div>
-      <Link to="/">Cerrar sesión</Link>
+      <Link
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }}
+        to="/"
+      >
+        Cerrar sesión
+      </Link>
       <Link to="/home">Documentos</Link>
       <Link to="/usernames">Nombres de empleados</Link>
     </Div>

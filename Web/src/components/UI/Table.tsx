@@ -1,7 +1,5 @@
-import { CLIENT_RENEG_WINDOW } from "node:tls";
 import React from "react";
 import styled from "styled-components";
-import styled2 from "styled-components/cssprop";
 
 const Div = styled.div`
   display: flex;
@@ -34,7 +32,7 @@ const Table = (props: any) => {
   if (props.data && props.data.length > 0) {
     items = props.data.map((el: any, i: number) => (
       <Row
-        onClick={() => props.onClickItem(el)}
+        onClick={() => props.onClickItem && props.onClickItem(el)}
         style={{ backgroundColor: i % 2 === 0 ? "#eef0f2" : "unset" }}
       >
         {Object.keys(el).map((key) => (

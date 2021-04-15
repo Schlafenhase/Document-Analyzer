@@ -49,8 +49,9 @@ const LogInScreen = (props: any) => {
       });
       const token = response.data.token;
       props.setToken(token);
-      localStorage.setItem('token', token);
+      localStorage.setItem("token", token);
       history.push("/home");
+      window.location.reload();
     } catch (error) {
       alert("Contraseña o usuario incorrecto");
     }

@@ -41,27 +41,25 @@ const UserNamesScreen = (props: any) => {
   const [name, setName] = useState("");
 
   const getEmployees = async () => {
-    const token = localStorage.getItem('token');
     const response = await axios.get(BaseURL + "/Api/Employee/Employees", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + props.token,
       },
     });
     setData(response.data.employees);
   };
 
   useEffect(() => {
-    getEmployees();
-  }, []);
+    if (props.token) getEmployees();
+  }, [props.token]);
 
   const postEmployee = async () => {
-    const token = localStorage.getItem('token');
     const response = await axios.post(
       BaseURL + "/Api/Employee",
       { name: name },
       {
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + props.token,
         },
       }
     );
@@ -73,6 +71,10 @@ const UserNamesScreen = (props: any) => {
       alert("Error en el servidor");
     }
   };
+
+  if (!props.token) {
+    return null;
+  }
 
   return (
     <Div>
