@@ -21,19 +21,17 @@ const ContainerList: React.FC = () => {
 
   const onContainerClick = (name: string) => context.getContainerItems(name);
 
-  return null;
-
-  // return (
-  //   <div className="container-list">
-  //     <h3>Containers</h3>
-  //     {items.map((item, i) => (
-  //       <div key={i}>
-  //         {item.name}
-  //         <button onClick={() => onContainerClick(item.name)}>View</button>
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
+  return (
+    <div className="container-list">
+      <h3>Containers</h3>
+      {items.map((item, i) => (
+        <div key={i}>
+          {item.name}
+          <button onClick={() => onContainerClick(item.name)}>View</button>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default ContainerList;

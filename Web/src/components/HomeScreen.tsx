@@ -135,7 +135,21 @@ const HomeScreen = (props: any) => {
           <p>Seleccione un nombre para ver detalles</p>
         )}
 
-        <ContainerList />
+        <div style={{ display: "none" }}>
+          <hr />
+          <hr />
+          <h2>Debug Components - Delete Them Later:</h2>
+          <ContainerList />
+          <hr />
+          <SelectedContainer className="container" />
+          <ItemsList />
+
+          <div className="item-details">
+            <ItemsUploaded />
+            <ItemsDownloaded />
+            <ItemsDeleted />
+          </div>
+        </div>
       </Container>
     </Div>
   );
