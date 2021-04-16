@@ -9,13 +9,8 @@ import ItemsList from "../azure-storage/components/ItemsList";
 import ItemsUploaded from "../azure-storage/components/ItemsUploaded";
 import ItemsDownloaded from "../azure-storage/components/ItemsDownloaded";
 import ItemsDeleted from "../azure-storage/components/ItemsDeleted";
-import {
-  SharedViewStateContext,
-  UploadsViewStateContext,
-} from "../azure-storage/contexts/viewStateContext";
-import { tap } from "rxjs/operators";
-import { ContainerItem } from "@azure/storage-blob";
-import FilesBg from "../assets/FilesBg.jpg";
+import { SharedViewStateContext } from "../azure-storage/contexts/viewStateContext";
+import refreshIcon from '../assets/refresh-icon.svg';
 import { Container } from "./UI/Container";
 import Button from "./UI/Button";
 import axios from "axios";
@@ -44,13 +39,23 @@ const Div = styled.div`
   height: 100%;
   padding: 32px;
 
-  background-image: url(${FilesBg});
-  background-size: cover;
+  background: rgb(72,135,159);
+  background: linear-gradient(90deg, rgba(72,135,159,1) 0%, rgba(67,193,158,1) 45%, rgba(67,197,158,1) 55%, rgba(73,122,159,1) 100%);
 `;
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const Title = styled.h1`
+  font-size: 24pt;
+  margin: 0 10px 10px 10px;
+  color: white;
+`;
+
+const InfoLabel = styled.p`
+  color: white;
 `;
 
 const HomeScreen = (props: any) => {
@@ -85,7 +90,7 @@ const HomeScreen = (props: any) => {
   };
 
   const uploadFile = async (name: String) => {
-    setStatus("procesando NLP...");
+    setStatus("Processing File with NLP...");
     const response = await axios.post(
       BaseURL + "/Api/NLP",
       { name },
@@ -96,7 +101,7 @@ const HomeScreen = (props: any) => {
       }
     );
     console.log(response.data);
-    setStatus("Completo");
+    setStatus("Processing Complete");
     setTimeout(getFiles, 1000);
     setTimeout(setStatus, 2000);
   };
@@ -115,8 +120,11 @@ const HomeScreen = (props: any) => {
     <Div>
       <Container>
         <Row>
-          <h1>Archivos guardados</h1>
-          <Button onClick={getFiles}>Refrescar</Button>
+          <Title>Saved Files</Title>
+          <Button onClick={getFiles}>
+            Refresh
+            <img src={refreshIcon}/>
+          </Button>
         </Row>
         <Table onClickItem={getDetail} data={data} />
 
@@ -124,7 +132,7 @@ const HomeScreen = (props: any) => {
           <p>STATUS: {status}</p>
         ) : (
           <InputFile
-            start={() => setStatus("subiendo a Azure...")}
+            start={() => setStatus("Uploading to Azure Blob Storage...")}
             uploaded={uploadFile}
           />
         )}
@@ -132,7 +140,7 @@ const HomeScreen = (props: any) => {
         {fileData.title ? (
           [<h2>{fileData.title}</h2>, <Table data={fileData.data} />]
         ) : (
-          <p>Seleccione un nombre para ver detalles</p>
+          <InfoLabel>Select a file to view details</InfoLabel>
         )}
 
         <div style={{ display: "none" }}>

@@ -6,6 +6,7 @@ import axios from "axios";
 import UsersBg from "../assets/UsersBg.jpg";
 import { Container } from "./UI/Container";
 import { BaseURL } from "../constants";
+import refreshIcon from "../assets/refresh-icon.svg";
 
 // const DATA = [
 //   {
@@ -34,6 +35,12 @@ const Div = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const Title = styled.h1`
+  font-size: 24pt;
+  margin: 0 10px 10px 10px;
+  color: white;
 `;
 
 const UserNamesScreen = (props: any) => {
@@ -80,8 +87,11 @@ const UserNamesScreen = (props: any) => {
     <Div>
       <Container>
         <Row>
-          <h1>Nombres de empleados</h1>
-          <Button onClick={getEmployees}>Refrescar</Button>
+          <Title>Nombres de empleados</Title>
+          <Button onClick={getEmployees}>
+            Refresh
+            <img src={refreshIcon}/>
+          </Button>
         </Row>
         <Table data={data} />
         <div>

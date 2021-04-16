@@ -1,13 +1,15 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  // background-color: #4972e7;
+  // background-color: #43c59e;
+  background-color: #497A9F;
+  box-shadow: 2px 2px 20px 0 white, -2px -2px 20px 0 white;
   max-width: 840px;
   overflow-y: auto;
   margin: auto;
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: 10px;
+  padding: 20px;
   max-height: 100%;
   box-sizing: border-box;
 `;
