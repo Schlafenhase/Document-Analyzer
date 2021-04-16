@@ -33,7 +33,7 @@ export class BlobUploadsViewStateService {
         this.blobStorage
           .uploadToBlobStorage(file, {
             ...options,
-            filename: file.name
+            filename: file.name,
           })
           .pipe(
             this.mapUploadResponse(file, options),

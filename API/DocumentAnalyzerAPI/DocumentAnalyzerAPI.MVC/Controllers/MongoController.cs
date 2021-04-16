@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentAnalyzerAPI.MVC.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MongoController : Controller
     {

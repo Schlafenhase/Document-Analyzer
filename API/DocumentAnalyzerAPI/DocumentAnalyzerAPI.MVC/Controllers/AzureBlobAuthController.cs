@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace DocumentAnalyzerAPI.MVC.Controllers
 {
@@ -39,9 +41,15 @@ namespace DocumentAnalyzerAPI.MVC.Controllers
         /// SAS token
         /// </returns>
         [HttpGet]
-        public string GetAzureBlobStorageSAS()
+        public Dictionary<string, string> GetAzureBlobStorageSAS()
         {
-            return _azureBlobAuthService.GenerateSAS(_azureBlobStorageConfig.AccountKey, _azureBlobStorageConfig.AccountName);
+            string SASToken = _azureBlobAuthService.GenerateSAS(_azureBlobStorageConfig.AccountKey, _azureBlobStorageConfig.AccountName);
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            result.Add("storageUri", _azureBlobStorageConfig.StorageUri);
+            result.Add("storageAccessToken", SASToken);
+
+            return result;
         }
     }
 }

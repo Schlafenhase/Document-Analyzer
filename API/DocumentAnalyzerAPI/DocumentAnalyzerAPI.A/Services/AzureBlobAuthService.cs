@@ -31,9 +31,9 @@ namespace DocumentAnalyzerAPI.A.Services
             var sharedKeyCredentials = new StorageSharedKeyCredential(accountName, key);
             var sasBuilder = new AccountSasBuilder()
             {
-                StartsOn = DateTimeOffset.UtcNow,
+                StartsOn = DateTimeOffset.UtcNow - TimeSpan.FromSeconds(10),
                 ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(5),
-                Services = AccountSasServices.Blobs,
+                Services = AccountSasServices.All,
                 ResourceTypes = AccountSasResourceTypes.All,
                 Protocol = SasProtocol.Https
             };
