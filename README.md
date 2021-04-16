@@ -162,5 +162,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 <p align="center">
   <img src="Docs/readme-images/schlafenhase-blue-ears-transparent.png" height="80">                                                                           
 </p>
-<p align="center">This project was made with academical purposes. Schlafenhase. 2021</p
+<p align="center">This project was made with academical purposes. Schlafenhase [BLUE]. 2021</p
 ```
