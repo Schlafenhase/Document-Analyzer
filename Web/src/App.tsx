@@ -40,20 +40,22 @@ const App = () => {
 
   return (
     <div className="App">
-      <Switch>
-        <Route path="/" exact>
-          <LogInScreen setToken={setToken} />
-        </Route>
-        <Route path="/home">
-          <HeaderBar setToken={setToken} />
-          <HomeScreen token={token} />
-        </Route>
-        <Route path="/usernames">
-          <HeaderBar setToken={setToken} />
-          <UserNamesScreen token={token} />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" exact>
+            <LogInScreen setToken={setToken} />
+          </Route>
+          <Route path="/home">
+            <HeaderBar setToken={setToken} />
+            <HomeScreen token={token} />
+          </Route>
+          <Route path="/usernames">
+            <HeaderBar setToken={setToken} />
+            <UserNamesScreen token={token} />
+          </Route>
+          <Redirect to="/" />
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 };
