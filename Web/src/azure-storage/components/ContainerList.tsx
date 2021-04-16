@@ -1,7 +1,7 @@
-import { ContainerItem } from '@azure/storage-blob';
-import React, { useContext, useEffect, useState } from 'react';
-import { tap } from 'rxjs/operators';
-import { SharedViewStateContext } from '../contexts/viewStateContext';
+import { ContainerItem } from "@azure/storage-blob";
+import React, { useContext, useEffect, useState } from "react";
+import { tap } from "rxjs/operators";
+import { SharedViewStateContext } from "../contexts/viewStateContext";
 
 const ContainerList: React.FC = () => {
   const context = useContext(SharedViewStateContext);
@@ -12,7 +12,7 @@ const ContainerList: React.FC = () => {
    */
   const getContainersEffect = () => {
     const sub = context.containers$
-      .pipe(tap(items => setItems(items)))
+      .pipe(tap((items) => setItems(items)))
       .subscribe();
 
     return () => sub.unsubscribe();

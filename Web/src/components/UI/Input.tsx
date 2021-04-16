@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -8,17 +7,16 @@ const Container = styled.div`
 `;
 
 const Input = (props: any) => {
-    const [empty, setEmpty] = useState(true);
-    return (
-        <Container>
-            <label style={{ opacity: empty ? 0 : 0.3 }}>{props.label}</label>
-            <input
-                {...props}
-                placeholder={props.label}
-                onChange={(e) => setEmpty(!e.target.value)}
-                />
-        </Container>
-    );
+  return (
+    <Container>
+      <input
+        {...props}
+        placeholder={props.label}
+        value={props.state[0]}
+        onChange={(e) => props.state[1](e.target.value)}
+      />
+    </Container>
+  );
 };
 
 export default Input;

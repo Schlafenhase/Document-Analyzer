@@ -1,6 +1,6 @@
 # Document Analyzer 📄🔍
 
-<p align=center><img src="Docs/readme-images/banner-second-wave.png" width="fit-content"></p>
+<p align=center><img src="Docs/readme-images/da-banner.png" width="fit-content"></p>
 
 Document Analyzer is a three-layered app to process and analyze company documents for sensitive or specific strings of information. It features a **React** website, **ASP .NET Core** as a REST API and a mixture of databases with **Microsoft SQL Server**, **MongoDB** & **Azure Blob Storage**.
 
@@ -55,7 +55,9 @@ If the above command doesn't work, try installing the Yarn package manager and r
 
 This will start the React development server associated with this project. You can access it at any browser, just type **localhost::3000** in the search bar. Be careful to not close the terminal window, as this will stop the server. You may also use NodeJS or React (Yarn) plugins in your IDE that allow you to run the previous terminal command. 
 
-At this IP address you can check out a general view of the app, but for the full experience you'll need to run the API and Database, which is supported on Microsoft Windows, macOS and GNU Linux with the help of .NET Core. 
+At this IP address you can check out a general view of the app, but for the full experience you'll need to run the API, which is supported on Microsoft Windows, macOS and GNU Linux with the help of .NET Core. Setup will be discussed in the subsection below.
+
+If the Services API and databases are already up and running, open the file **constants.ts** and change the *baseURL* string to the public IP address where the API is hosted.
 
 #### Services API & Databases ⚙
 
@@ -63,9 +65,25 @@ It's possible to run the server on a computer connected to a local area network 
 
 To start, grab a copy of Microsoft SQL Server as well a MongoDB (We tried the Community edition and it worked well) and install it locally. Download Visual Studio (not Code) and add the **.NET Core** dependencies required to run these projects. Then open **DocumentAnalyzerAPI.sln** located in the **API/DocumentAnalyzerAPI** folder. Press the start button to run the API on your local network.
 
-Finally, the client web app should update with the server information. The relational SQL and the MongoDB databases are created automatically when running the API and inserting data.
+Navigate to the *NuGet Package Manager Console*, select the MVC subproject as *DocumentAnalyzerAPI.MVC* and run the following command:
 
-Our tests were made on Windows, macOS and Linux computers running React 17.0.3, Visual Studio and SQL Server 2019 for the full stack, and Mac computers for front end development.
+```
+update-database -Context ApplicationDbContext
+```
+
+Once it finishes, change the subproject to *DocumentAnalyzerAPI.I.D* and run:
+
+```
+update-database -Context EntitiesDbContext
+```
+
+This will create the necessary databases in SQL Server using the entities defined by .NET Core's Entity Framework. By default, it will try to connect to a local database instance. However, this will only work in Microsoft Windows platforms, because MS SQL Server only runs natively there. If required to run the API on a different operating system, modify the SQL Server connection string coded in *ConnectionStrings* attribute, located in the file **appsettings.json**, inside the folder *API/DocumentAnalyzerAPI/*.
+
+Finally, the client web app should update with the server information. The MongoDB Database will be created automatically and will continue to operate by itself in a local instance, but the same **appsettings.json** file allows for a different instance assigned to a specific connection string in the attribute *MongoDatabaseSettings*. For file storage it's also important to set the corresponding tokens for connecting to an Azure Blobs server. These are found in conjunction with the SQL Server and MongoDB connection strings.
+
+You may now change the *baseURL* string in the web app, as explained above. This will allow you to test the app's full functionality. 
+
+Our tests were made on Windows, macOS and Linux computers running React 17.0.3, Visual Studio and SQL Server 2019 for the full stack. A CI pipeline was also implemented with GitHub Actions on this repository for build, test and code quality analysis purposes.
 
 ## Deployment ✅
 
@@ -86,6 +104,9 @@ For deployment on a live system, refer to the **Docs** folder of this GitHub pro
     </td>
     <td>
       <p align=center><img src="https://cdn.worldvectorlogo.com/logos/microsoft-sql-server.svg" width=100 height=100></p>
+    </td>
+    <td>
+      <p align=center><img src="https://www.jasoft.org/Blog/image.axd?picture=/2018/azure-storage-blob-logo.png" width=100 height=100></p>
     </td>
   </tr>
   
@@ -108,6 +129,11 @@ For deployment on a live system, refer to the **Docs** folder of this GitHub pro
         <a href="https://www.microsoft.com/en-us/sql-server/sql-server-2019"><b>Microsoft SQL Server</b></a>
       </br>SQL Database</p>
     </td>
+    <td>
+      <p align=center>
+        <a href="https://azure.microsoft.com/en-us/services/storage/blobs/"><b>Azure Blob Storage</b></a>
+      </br>File Storage</p>
+    </td>
   </tr>
 </table>
 
@@ -119,7 +145,7 @@ Refer to the [**Docs**](https://github.com/Schlafenhase/Document-Analyzer/tree/m
 
 ### *Schlafenhase [BLUE] Development Team* 🐰💙
 
-* **Juan P. Alvarado** - *Lead Developer on Front-end Interaction* - [juan230500](https://github.com/juan230500)
+* **J.P. Alvarado** - *Lead Developer on Front-end Interaction* - [juan230500](https://github.com/juan230500)
 * **Kevin Cordero** - *Lead Developer on Back-end & Connections* - [Skryfall](https://github.com/Skryfall)
 * **J.A Ibarra** - *Project Manager & DevOps. Lead Designer* - [AlejandroIbarraC](https://github.com/AlejandroIbarraC)
 * **Jesús Sandoval** - *Lead Software Architect* - [shuzz22260427](https://github.com/shuzz22260427)
@@ -134,8 +160,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 * Isaac Ramírez - [GitHub](https://github.com/IsaacSNK)
 
 <p align="center">
-  <img src="https://s3.amazonaws.com/madewithangular.com/img/500.png" height="80">
-  <img src="Docs/readme-images/schlafenhase-blue-logo.png" height="80">                                                                           
+  <img src="Docs/readme-images/schlafenhase-blue-ears-transparent.png" height="80">                                                                           
 </p>
-<p align="center">This project was made with academical purposes. Schlafenhase. 2021</p
+<p align="center">This project was made with academical purposes. Schlafenhase [BLUE]. 2021</p
 ```
