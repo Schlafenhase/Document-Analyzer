@@ -7,6 +7,9 @@ import UsersBg from "../assets/UsersBg.jpg";
 import { Container } from "./UI/Container";
 import { BaseURL } from "../constants";
 import refreshIcon from "../assets/refresh-icon.svg";
+import addIcon from "../assets/add-icon.svg";
+import Swal from "sweetalert2";
+import Entry from "./UI/Entry";
 
 // const DATA = [
 //   {
@@ -71,11 +74,23 @@ const UserNamesScreen = (props: any) => {
       }
     );
     if (response.status === 200) {
-      alert("Nombre agregado correctamente");
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Employee added',
+        showConfirmButton: false,
+        timer: 1000
+      })
       setName("");
       setTimeout(getEmployees, 1000);
     } else {
-      alert("Error en el servidor");
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Server error',
+        showConfirmButton: false,
+        timer: 1000
+      })
     }
   };
 
@@ -95,13 +110,15 @@ const UserNamesScreen = (props: any) => {
         </Row>
         <Table data={data} />
         <div>
-          <input
-            placeholder="Nuevo usuario"
+          <Entry
+            label="New User"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            state={name}
           />
-          <Button onClick={postEmployee}>Agregar</Button>
+          <Button onClick={postEmployee}>
+            Agregar
+            <img src={addIcon}/>
+          </Button>
         </div>
       </Container>
     </Div>

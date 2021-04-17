@@ -9,6 +9,7 @@ import signInIcon from "../assets/signIn-icon.svg";
 import Entry from "./UI/Entry";
 import schlafenhaseLogo from "../assets/schlafenhase-blue-transparent.png";
 import gitHubIcon from "../assets/github-icon.svg";
+import Swal from "sweetalert2";
 
 const Div = styled.div`
   overflow: hidden;
@@ -127,7 +128,13 @@ const LogInScreen = (props: any) => {
       history.push("/home");
       window.location.reload();
     } catch (error) {
-      alert("Incorrect username/email or password");
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Incorrect username/email or password',
+        showConfirmButton: false,
+        timer: 1000
+      })
     }
   };
 

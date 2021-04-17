@@ -15,6 +15,8 @@ import { Container } from "./UI/Container";
 import Button from "./UI/Button";
 import axios from "axios";
 import { BaseURL } from "../constants";
+import Dropzone from "./UI/Dropzone";
+import EmployeeResultsTable from "./UI/EmployeeResultsTable";
 
 // const DATA = [
 //   {
@@ -62,7 +64,16 @@ const FileLabel = styled.div`
   color: white;
   font-size: 14pt;
   margin-top: 20px;
+  margin-bottom: 20px;
   font-style: italic;
+`;
+
+const ProcessingLabel = styled.div`
+  color: #c2c2c2;
+  font-size: 14pt;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
 `;
 
 const HomeScreen = (props: any) => {
@@ -134,18 +145,21 @@ const HomeScreen = (props: any) => {
           </Button>
         </Row>
         <Table onClickItem={getDetail} data={data} />
+        <FileLabel>Upload new file:</FileLabel>
 
         {status ? (
-          <p>STATUS: {status}</p>
+          <ProcessingLabel>STATUS: {status}</ProcessingLabel>
         ) : (
-          <InputFile
-            start={() => setStatus("Uploading to Azure Blob Storage...")}
-            uploaded={uploadFile}
-          />
+            <div>
+              <Dropzone
+                  start={() => setStatus("Uploading to Azure Blob Storage...")}
+                  uploaded={uploadFile}
+              />
+            </div>
         )}
 
         {fileData.title ? (
-          [<FileLabel>Selected File: {fileData.title}</FileLabel>, <Table data={fileData.data} />]
+          [<FileLabel>Selected File: {fileData.title}</FileLabel>, <EmployeeResultsTable data={fileData.data} />]
         ) : (
           <FileLabel>Select a file to view details</FileLabel>
         )}

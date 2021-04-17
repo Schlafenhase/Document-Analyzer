@@ -16,9 +16,13 @@ Main features:
 
 ## Photos 📷
 
-Home                       | Home                      |
+Sign In View                       | Files View                      |
 :-------------------------:|:-------------------------:|
-![](Docs/readme-images/e1.png)| ![](Docs/readme-images/d1.png) 
+![](Docs/readme-images/signin-view.png)| ![](Docs/readme-images/files-view.png) 
+
+Files View - NLP Analyzed                       | Add Employees View                      |
+:-------------------------:|:-------------------------:|
+![](Docs/readme-images/files-view-expanded.png)| ![](Docs/readme-images/employee-view.png) 
 
 ## Getting Started 🚀
 
