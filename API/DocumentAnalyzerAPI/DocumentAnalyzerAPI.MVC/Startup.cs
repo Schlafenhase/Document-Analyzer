@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using DocumentAnalyzerAPI.MVC.Data;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +13,9 @@ using DocumentAnalyzerAPI.MVC.Configuration;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using DocumentAnalyzerAPI.MVC.Models;
+using Microsoft.Extensions.Options;
+using DocumentAnalyzerAPI.MVC.Services;
 
 namespace DocumentAnalyzerAPI.MVC
 {
@@ -35,6 +32,12 @@ namespace DocumentAnalyzerAPI.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            services.Configure<AzureBlobStorageConfig>(Configuration.GetSection("AzureObjectStorage"));
+
+            services.Configure<IISOptions>(options =>
+            {
+                options.ForwardClientCertificate = false;
+            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -65,6 +68,15 @@ namespace DocumentAnalyzerAPI.MVC
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            // MongoDB Startup
+            services.Configure<MongoDatabaseSettings>(
+                Configuration.GetSection(nameof(MongoDatabaseSettings)));
+
+            services.AddSingleton<IMongoDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
+
+            services.AddSingleton<MongoFileService>();
+
             services.AddControllersWithViews();
 
             services.AddRazorPages();
@@ -81,7 +93,6 @@ namespace DocumentAnalyzerAPI.MVC
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DocumentAnalyzerAPI", Version = "v1" });
-              //  c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
             RegisterServices(services);

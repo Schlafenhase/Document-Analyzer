@@ -1,8 +1,5 @@
 ﻿using DocumentAnalyzerAPI.D.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DocumentAnalyzerAPI.I.D.Context
 {
