@@ -13,7 +13,10 @@ const StyledEntry = styled.input`
 `;
 
 const Entry = (props: any) => {
-    return <StyledEntry placeholder={props.label} {...props}>{props.children}</StyledEntry>;
+    return <StyledEntry placeholder={props.label}
+                        {...props}
+                        value={props.state[0]}
+                        onChange={(e) => props.state[1](e.target.value)}>{props.children}</StyledEntry>;
 };
 
 export default Entry;

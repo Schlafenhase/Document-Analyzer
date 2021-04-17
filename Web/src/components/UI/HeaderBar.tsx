@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import homeIcon from "../../assets/home-icon.svg";
+import fileIcon from "../../assets/file-icon.svg";
 import userIcon from "../../assets/user-icon.svg";
 import logo from "../../assets/da-logo.svg";
 
 const Div = styled.nav`
-  background-color: #2f76aa;
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(73,122,159,1) 15%);
   color: white;
   display: flex;
   gap: 16px;
@@ -58,6 +58,14 @@ const LogoWords = styled.h1`
   font-size: 24pt;
   float: right;
   margin-left: 20px;
+  margin-top: 5px;
+  margin-right: 20px;
+`;
+
+const Logo = styled.img`
+  height: 50px;
+  margin-top: 5px;
+  margin-left: 5px;
 `;
 
 const HeaderBar = (props: any) => {
@@ -72,13 +80,13 @@ const HeaderBar = (props: any) => {
     return (
         <Div>
             <div>
-                <img src={logo} style={{height: 50}}/>
+                <Logo src={logo}/>
                 <LogoWords>Document Analyzer</LogoWords>
             </div>
             <Link to="/home" onClick={() => setCurrentPage('home')}>
                 <HeaderButton style={{ backgroundColor: currentPage === 'home' ? "#505050" : "#184f81" }}>
-                    Home
-                    <img src={homeIcon}/>
+                    Files
+                    <img src={fileIcon}/>
                 </HeaderButton>
             </Link>
             <Link to="/usernames" onClick={() => setCurrentPage('employees')}>

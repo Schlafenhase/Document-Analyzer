@@ -21,7 +21,7 @@ const InputFile: any = (props: any) => {
   };
 
   return (
-    <div className="input-file">
+    <div className="input-file" style={{color: "white"}}>
       <input
         ref={inputFileRef}
         type="file"

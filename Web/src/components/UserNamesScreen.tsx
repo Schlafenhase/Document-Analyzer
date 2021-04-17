@@ -87,7 +87,7 @@ const UserNamesScreen = (props: any) => {
     <Div>
       <Container>
         <Row>
-          <Title>Nombres de empleados</Title>
+          <Title>Employees</Title>
           <Button onClick={getEmployees}>
             Refresh
             <img src={refreshIcon}/>

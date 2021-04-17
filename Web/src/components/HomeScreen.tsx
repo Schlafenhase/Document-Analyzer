@@ -58,6 +58,13 @@ const InfoLabel = styled.p`
   color: white;
 `;
 
+const FileLabel = styled.div`
+  color: white;
+  font-size: 14pt;
+  margin-top: 20px;
+  font-style: italic;
+`;
+
 const HomeScreen = (props: any) => {
   const [data, setData] = useState([]);
   const [fileData, setDataFile]: any = useState({});
@@ -138,9 +145,9 @@ const HomeScreen = (props: any) => {
         )}
 
         {fileData.title ? (
-          [<h2>{fileData.title}</h2>, <Table data={fileData.data} />]
+          [<FileLabel>Selected File: {fileData.title}</FileLabel>, <Table data={fileData.data} />]
         ) : (
-          <InfoLabel>Select a file to view details</InfoLabel>
+          <FileLabel>Select a file to view details</FileLabel>
         )}
 
         <div style={{ display: "none" }}>
