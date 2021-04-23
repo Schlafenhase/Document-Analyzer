@@ -10,7 +10,7 @@ import ItemsUploaded from "../azure-storage/components/ItemsUploaded";
 import ItemsDownloaded from "../azure-storage/components/ItemsDownloaded";
 import ItemsDeleted from "../azure-storage/components/ItemsDeleted";
 import { SharedViewStateContext } from "../azure-storage/contexts/viewStateContext";
-import refreshIcon from '../assets/refresh-icon.svg';
+import refreshIcon from "../assets/refresh-icon.svg";
 import { Container } from "./UI/Container";
 import Button from "./UI/Button";
 import axios from "axios";
@@ -41,8 +41,14 @@ const Div = styled.div`
   height: 100%;
   padding: 32px;
 
-  background: rgb(72,135,159);
-  background: linear-gradient(90deg, rgba(72,135,159,1) 0%, rgba(67,193,158,1) 45%, rgba(67,197,158,1) 55%, rgba(73,122,159,1) 100%);
+  background: rgb(72, 135, 159);
+  background: linear-gradient(
+    90deg,
+    rgba(72, 135, 159, 1) 0%,
+    rgba(67, 193, 158, 1) 45%,
+    rgba(67, 197, 158, 1) 55%,
+    rgba(73, 122, 159, 1) 100%
+  );
 `;
 
 const Row = styled.div`
@@ -131,6 +137,7 @@ const HomeScreen = (props: any) => {
   }, []);
 
   if (!props.token) {
+    window.location.reload();
     return null;
   }
 
@@ -141,7 +148,7 @@ const HomeScreen = (props: any) => {
           <Title>Saved Files</Title>
           <Button onClick={getFiles}>
             Refresh
-            <img src={refreshIcon}/>
+            <img src={refreshIcon} />
           </Button>
         </Row>
         <Table onClickItem={getDetail} data={data} />
@@ -150,16 +157,19 @@ const HomeScreen = (props: any) => {
         {status ? (
           <ProcessingLabel>STATUS: {status}</ProcessingLabel>
         ) : (
-            <div>
-              <Dropzone
-                  start={() => setStatus("Uploading to Azure Blob Storage...")}
-                  uploaded={uploadFile}
-              />
-            </div>
+          <div>
+            <Dropzone
+              start={() => setStatus("Uploading to Azure Blob Storage...")}
+              uploaded={uploadFile}
+            />
+          </div>
         )}
 
         {fileData.title ? (
-          [<FileLabel>Selected File: {fileData.title}</FileLabel>, <EmployeeResultsTable data={fileData.data} />]
+          [
+            <FileLabel>Selected File: {fileData.title}</FileLabel>,
+            <EmployeeResultsTable data={fileData.data} />,
+          ]
         ) : (
           <FileLabel>Select a file to view details</FileLabel>
         )}

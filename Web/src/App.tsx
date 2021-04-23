@@ -53,7 +53,7 @@ const App = () => {
             <HeaderBar setToken={setToken} />
             <UserNamesScreen token={token} />
           </Route>
-          <Redirect to="/" />
+          <Redirect to="/" exact />
         </Switch>
       </BrowserRouter>
     </div>

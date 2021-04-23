@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import fileIcon from "../../assets/file-icon.svg";
@@ -6,7 +6,11 @@ import userIcon from "../../assets/user-icon.svg";
 import logo from "../../assets/da-logo.svg";
 
 const Div = styled.nav`
-  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(73,122,159,1) 15%);
+  background: linear-gradient(
+    0deg,
+    rgba(222, 222, 222, 1) 0%,
+    rgba(73, 122, 159, 1) 15%
+  );
   color: white;
   display: flex;
   gap: 16px;
@@ -28,7 +32,7 @@ const HeaderButton = styled.button`
   font-size: 13pt;
   height: 40px;
   margin-top: 5px;
-  
+
   img {
     height: 20px;
     filter: invert();
@@ -46,7 +50,7 @@ const SignOutButton = styled.button`
   font-size: 13pt;
   height: 40px;
   margin-top: 5px;
-  
+
   img {
     height: 20px;
     filter: invert();
@@ -69,38 +73,47 @@ const Logo = styled.img`
 `;
 
 const HeaderBar = (props: any) => {
-    const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState("home");
 
-    function signOut() {
-        localStorage.removeItem("token");
-        window.location.reload();
-        setCurrentPage('/')
-    }
+  function signOut() {
+    localStorage.removeItem("token");
+    setCurrentPage("/");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  }
 
-    return (
-        <Div>
-            <div>
-                <Logo src={logo}/>
-                <LogoWords>Document Analyzer</LogoWords>
-            </div>
-            <Link to="/home" onClick={() => setCurrentPage('home')}>
-                <HeaderButton style={{ backgroundColor: currentPage === 'home' ? "#505050" : "#184f81" }}>
-                    Files
-                    <img src={fileIcon}/>
-                </HeaderButton>
-            </Link>
-            <Link to="/usernames" onClick={() => setCurrentPage('employees')}>
-                <HeaderButton style={{ backgroundColor: currentPage === 'employees' ? "#505050" : "#184f81" }}>
-                    Employees
-                    <img src={userIcon}/>
-                </HeaderButton>
-            </Link>
-            <Link onClick={() => signOut()} to="/">
-                <SignOutButton>
-                    Cerrar sesión
-                </SignOutButton>
-            </Link>
-        </Div>
+  return (
+    <Div>
+      <div>
+        <Logo src={logo} />
+        <LogoWords>Document Analyzer</LogoWords>
+      </div>
+      <Link to="/home" onClick={() => setCurrentPage("home")}>
+        <HeaderButton
+          style={{
+            backgroundColor: currentPage === "home" ? "#505050" : "#184f81",
+          }}
+        >
+          Files
+          <img src={fileIcon} />
+        </HeaderButton>
+      </Link>
+      <Link to="/usernames" onClick={() => setCurrentPage("employees")}>
+        <HeaderButton
+          style={{
+            backgroundColor:
+              currentPage === "employees" ? "#505050" : "#184f81",
+          }}
+        >
+          Employees
+          <img src={userIcon} />
+        </HeaderButton>
+      </Link>
+      <Link onClick={() => signOut()} to="/">
+        <SignOutButton>Cerrar sesión</SignOutButton>
+      </Link>
+    </Div>
   );
 };
 

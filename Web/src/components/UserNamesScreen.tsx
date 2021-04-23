@@ -75,26 +75,27 @@ const UserNamesScreen = (props: any) => {
     );
     if (response.status === 200) {
       Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Employee added',
+        position: "center",
+        icon: "success",
+        title: "Employee added",
         showConfirmButton: false,
-        timer: 1000
-      })
+        timer: 1000,
+      });
       setName("");
       setTimeout(getEmployees, 1000);
     } else {
       Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'Server error',
+        position: "center",
+        icon: "error",
+        title: "Server error",
         showConfirmButton: false,
-        timer: 1000
-      })
+        timer: 1000,
+      });
     }
   };
 
   if (!props.token) {
+    window.location.reload();
     return null;
   }
 
@@ -105,19 +106,15 @@ const UserNamesScreen = (props: any) => {
           <Title>Employees</Title>
           <Button onClick={getEmployees}>
             Refresh
-            <img src={refreshIcon}/>
+            <img src={refreshIcon} />
           </Button>
         </Row>
         <Table data={data} />
         <div>
-          <Entry
-            label="New User"
-            type="text"
-            state={name}
-          />
+          <Entry label="New User" type="text" state={[name, setName]} />
           <Button onClick={postEmployee}>
             Agregar
-            <img src={addIcon}/>
+            <img src={addIcon} />
           </Button>
         </div>
       </Container>
