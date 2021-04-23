@@ -87,7 +87,7 @@ const UserNamesScreen = (props: any) => {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Server error",
+        title: "Server Error",
         showConfirmButton: false,
         timer: 1000,
       });
