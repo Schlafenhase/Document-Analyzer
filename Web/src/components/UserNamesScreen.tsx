@@ -95,7 +95,7 @@ const UserNamesScreen = (props: any) => {
   };
 
   if (!props.token) {
-    window.location.reload();
+    //window.location.reload();
     return null;
   }
 
