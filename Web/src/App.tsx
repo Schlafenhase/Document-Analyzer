@@ -10,9 +10,9 @@ import {
 import LogInScreen from "./components/LogInScreen";
 import HomeScreen from "./components/HomeScreen";
 import UserNamesScreen from "./components/UserNamesScreen";
-import HeaderBar from "./components/UI/HeaderBar";
 import axios from "axios";
 import { BaseURL } from "./constants";
+import Header from "./components/UI/Header";
 
 const App = () => {
   const [token, setToken]: any = useState();
@@ -46,11 +46,13 @@ const App = () => {
             <LogInScreen setToken={setToken} />
           </Route>
           <Route path="/home">
-            <HeaderBar setToken={setToken} />
+            <Header />
+            {/*<HeaderBar setToken={setToken} />*/}
             <HomeScreen token={token} />
           </Route>
           <Route path="/usernames">
-            <HeaderBar setToken={setToken} />
+            <Header />
+            {/*<HeaderBar setToken={setToken} />*/}
             <UserNamesScreen token={token} />
           </Route>
           <Redirect to="/" exact />
