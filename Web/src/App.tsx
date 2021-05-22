@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./styles/sass/App.scss";
+import "./styles/css/App.css";
 import {
   Switch,
   Route,

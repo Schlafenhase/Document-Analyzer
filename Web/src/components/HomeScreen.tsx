@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
-import Table from "./UI/Table";
 import ContainerList from "../azure-storage/components/ContainerList";
 import SelectedContainer from "../azure-storage/components/SelectedContainer";
-import InputFile from "../azure-storage/components/InputFile";
 import ItemsList from "../azure-storage/components/ItemsList";
 import ItemsUploaded from "../azure-storage/components/ItemsUploaded";
 import ItemsDownloaded from "../azure-storage/components/ItemsDownloaded";
 import ItemsDeleted from "../azure-storage/components/ItemsDeleted";
 import { SharedViewStateContext } from "../azure-storage/contexts/viewStateContext";
-import refreshIcon from "../assets/refresh-icon.svg";
 import { Container } from "./UI/Container";
 import {Button, Card, CardContent} from '@material-ui/core';
 import axios from "axios";
