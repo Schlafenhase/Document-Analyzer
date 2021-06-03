@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// export const BaseURL = "http://35ef82d08f1e.ngrok.io/DocAnalyzerApi";
-export const BaseURL = "https://localhost:44328";
-export const AuthURL = "http://localhost:8081";
+//export const BaseURL = "https://daapi.conveyor.cloud";
+//export const BaseURL = "https://localhost:44328";
+export const BaseURL = "http://d288a604bb24.ngrok.io";
 
 export const checkToken =  async () => {
     const savedToken = localStorage.getItem("token");

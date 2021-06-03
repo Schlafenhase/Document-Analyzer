@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {Button, TextField} from "@material-ui/core";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import axios from "axios";
-import {AuthURL, BaseURL} from "../constants";
+import {BaseURL} from "../constants";
 import logo from "../assets/da-logo-words-vertical-raster.png";
 import schlafenhaseLogo from "../assets/schlafenhase-blue-transparent.png";
 import gitHubIcon from "../assets/github-icon.svg";
@@ -154,29 +154,31 @@ const LogInScreen = (props: any) => {
    */
   const login = async () => {
     try {
-      // Define parameters
-      const params = new URLSearchParams()
-      params.append('username', nameState[0])
-      params.append('password', passwordState[0])
-      params.append('client_id', 'document-analyzer')
-      params.append('grant_type', 'password')
-
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }
-      const response = await axios.post(AuthURL + "/auth/realms/document-analyzer-realm/protocol/openid-connect/token", params, config);
+      const response = await axios.post( BaseURL + "/Api/KeyCloakAuth",
+          {
+            name: nameState[0],
+            password: passwordState[0]
+          });
       const token = response.data.access_token;
       props.setToken(token);
-      localStorage.setItem("token", token);
-      history.push("/home");
-      window.location.reload();
+      if (token !== undefined) {
+        localStorage.setItem("token", token);
+        history.push("/home");
+        window.location.reload();
+      } else {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Incorrect username/email or password',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      }
     } catch (error) {
       Swal.fire({
         position: 'center',
         icon: 'error',
-        title: 'Incorrect username/email or password',
+        title: 'Error signing in',
         showConfirmButton: false,
         timer: 1000
       })

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 
 import ContainerList from "../azure-storage/components/ContainerList";
@@ -17,24 +17,7 @@ import EmployeeResultsTable from "./UI/EmployeeResultsTable";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
 import {DataGrid, GridColumns} from "@material-ui/data-grid";
-
-// const DATA = [
-//   {
-//     "Nombre del archivo": "Doc1",
-//     "Fecha de subida": "12/10/2020",
-//     "Progreso de subida": "Listo",
-//   },
-//   {
-//     "Nombre del archivo": "Doc1.1",
-//     "Fecha de subida": "30/10/2020",
-//     "Progreso de subida": "Listo",
-//   },
-//   {
-//     "Nombre del archivo": "Minuta",
-//     "Fecha de subida": "12/3/2021",
-//     "Progreso de subida": 50,
-//   },
-// ];
+import {HubConnectionBuilder} from "@microsoft/signalr";
 
 const Div = styled.div`
   box-sizing: border-box;
@@ -115,28 +98,64 @@ const CustomDataGrid = withStyles((theme) => ({
 
 const columns: GridColumns = [
   { field: 'id', headerName: 'ID', description: 'Employee ID number', flex: 0.5, headerAlign: 'center' },
-  { field: 'name', headerName: 'File Name', description: 'File Name', flex: 0.5, headerAlign: 'center' }
+  { field: 'name', headerName: 'File Name', description: 'File Name', flex: 0.5, headerAlign: 'center' },
+  { field: 'container', headerName: 'Container', description: 'Container Name', flex: 0.5, headerAlign: 'center' }
 ];
 
 const HomeScreen = (props: any) => {
+  const [ connection, setConnection ] = useState(null);
   const [data, setData] = useState([]);
   const [fileData, setDataFile]: any = useState({});
   const [status, setStatus]: any = useState();
   const classes = useStyles();
 
-  const getFiles = async () => {
-    const response = await axios.get(BaseURL + "/Api/File/Files", {
-      headers: {
-        Authorization: "Bearer " + props.token,
-      },
-    });
-    setData(response.data.files);
-  };
+  const viewContext = useContext(SharedViewStateContext);
+
+  useEffect(() => {
+    // Load default Azure Blob container objects
+    viewContext.getContainerItems("dcanalyzerblob");
+    setStatus("Ready for Analysis");
+
+    // Start connection for web socket
+    const newConnection = new HubConnectionBuilder()
+        .withUrl(BaseURL + '/hubs/chat')
+        .withAutomaticReconnect()
+        .build();
+
+    // @ts-ignore
+    setConnection(newConnection);
+  }, []);
 
   useEffect(() => {
     if (props.token) getFiles();
   }, [props.token]);
 
+  useEffect(() => {
+    if (connection) {
+      // @ts-ignore
+      connection.start()
+          .then((result: any) => {
+            console.log('Connected to web socket');
+
+            // @ts-ignore
+            connection.on('ReceiveMessage', message => {
+              let msg = message.message;
+              setStatus(msg);
+            });
+          })
+          .catch((e: any) => console.log('Web socket connection failed: ', e));
+    }
+  }, [connection]);
+
+  // if (!props.token) {
+  //   //window.location.reload();
+  //   return null;
+  // }
+
+  /**
+   * Gets file detail from server
+   * @param file File ID to check detail info
+   */
   const getDetail = async (file: any) => {
     const response = await axios.get(BaseURL + "/Api/Mongo/" + file.id, {
       headers: {
@@ -150,8 +169,23 @@ const HomeScreen = (props: any) => {
     setDataFile({ title: file.name, data: dataFile });
   };
 
+  /**
+   * Gets files from server
+   */
+  const getFiles = async () => {
+    const response = await axios.get(BaseURL + "/Api/File/Files", {
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+    });
+    setData(response.data);
+  };
+
+  /**
+   * Upload file to server for document analysis
+   * @param name File name to be analyzed
+   */
   const uploadFile = async (name: String) => {
-    setStatus("Processing File with NLP...");
     const response = await axios.post(
       BaseURL + "/Api/NLP",
       { name },
@@ -161,22 +195,11 @@ const HomeScreen = (props: any) => {
         },
       }
     );
+
     console.log(response.data);
-    setStatus("Processing Complete");
     setTimeout(getFiles, 1000);
     setTimeout(setStatus, 2000);
   };
-
-  const viewContext = useContext(SharedViewStateContext);
-
-  useEffect(() => {
-    viewContext.getContainerItems("dcanalyzerblob");
-  }, []);
-
-  if (!props.token) {
-    //window.location.reload();
-    return null;
-  }
 
   return (
     <Div>
@@ -196,7 +219,7 @@ const HomeScreen = (props: any) => {
               </div>
               <FileLabel>Upload new file:</FileLabel>
 
-              {status ? (
+              {(status != 'Ready for Analysis') ? (
                 <ProcessingLabel>STATUS: {status}</ProcessingLabel>
               ) : (
                 <div>
@@ -211,6 +234,9 @@ const HomeScreen = (props: any) => {
                 [
                   <FileLabel>Selected File: {fileData.title}</FileLabel>,
                   <EmployeeResultsTable data={fileData.data} />,
+                  <div style={{ height: 430, width: '100%', backgroundColor: "white", borderRadius: "15px", marginBottom: "20px", marginTop: "20px" }}>
+                    <CustomDataGrid rows={fileData.data} columns={columns} pageSize={6} disableSelectionOnClick />
+                  </div>,
                 ]
               ) : (
                 <FileLabel>Select a file to view details</FileLabel>

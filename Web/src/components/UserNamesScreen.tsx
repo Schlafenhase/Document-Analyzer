@@ -112,7 +112,7 @@ const UserNamesScreen = (props: any) => {
         Authorization: "Bearer " + props.token,
       },
     });
-    setData(response.data.employees);
+    setData(response.data);
     console.log(data);
   };
 
