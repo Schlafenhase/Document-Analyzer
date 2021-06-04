@@ -47,7 +47,7 @@ namespace DAApi.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when trying to retrieve the employees list from the database");
+                Debug.WriteLine(ex);
                 return null;
             }
             
@@ -69,7 +69,7 @@ namespace DAApi.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when inserting an employee to the database");
+                Debug.WriteLine(ex);
                 return;
             }
         }

@@ -37,8 +37,8 @@ namespace DAApi
             IdentityModelEventSource.ShowPII = true;
 
             services.Configure<KeyCloakConfig>(Configuration.GetSection("KeyCloak"));
-            services.Configure<PublisherConfig>(Configuration.GetSection("RabbitMQ"));
             services.Configure<AzureBlobStorageConfig>(Configuration.GetSection("AzureObjectStorage"));
+            services.Configure<RabbitMQConfig>(Configuration.GetSection("RabbitMQ"));
 
             services.AddRazorPages();
 
@@ -53,6 +53,8 @@ namespace DAApi
                 sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
 
             services.AddSingleton<MongoFileService>();
+            services.AddSingleton<PublisherService>();
+            services.AddSingleton<ChatHub>();
 
             services.AddCors(options =>
             {
@@ -187,17 +189,17 @@ namespace DAApi
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/hubs/chat");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
         }
 
         private static void RegisterServices(IServiceCollection services)
         {
-            services.AddScoped<IPublisherService, PublisherService>();
             services.AddScoped<IAzureBlobAuthService, AzureBlobAuthService>();
             services.AddScoped<IKeyCloakService, KeyCloakService>();
             services.AddScoped<IEmployeeService, EmployeeService>();

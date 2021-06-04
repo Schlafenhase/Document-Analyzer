@@ -1,7 +1,14 @@
-﻿using DAApi.Interfaces;
+﻿using DAApi.Configuration;
+using DAApi.Hubs;
+using DAApi.Hubs.Clients;
+using DAApi.Interfaces;
 using DAApi.Models;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,36 +18,68 @@ using System.Threading.Tasks;
 
 namespace DAApi.Services
 {
-    public class PublisherService : IPublisherService
+    public class PublisherService
     {
-        public PublisherService()
-        {
+        private readonly IConnection connection;
+        private readonly IModel channel;
+        private readonly string replyQueueName;
+        private readonly EventingBasicConsumer consumer;
+        private readonly BlockingCollection<string> respQueue = new BlockingCollection<string>();
+        private readonly IBasicProperties props;
+        private readonly IHubContext<ChatHub, IChatClient> _chatHub;
+        private readonly RabbitMQConfig _rabbitMQConfig;
 
+        public PublisherService(IHubContext<ChatHub, IChatClient> chatHub, IOptionsMonitor<RabbitMQConfig> rabbitOptionsMonitor)
+        {
+            _rabbitMQConfig = rabbitOptionsMonitor.CurrentValue;
+            _chatHub = chatHub;
+
+            var factory = new ConnectionFactory() { HostName = _rabbitMQConfig.HostName };
+
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
+            replyQueueName = channel.QueueDeclare().QueueName;
+            consumer = new EventingBasicConsumer(channel);
+
+            props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            consumer.Received += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    Debug.WriteLine(response);
+
+                    ChatMessage chatMessage = new ChatMessage
+                    {
+                        User = "API",
+                        Message = response
+                    };
+
+                    await _chatHub.Clients.All.ReceiveMessage(chatMessage);
+                }
+            };
         }
 
-        public int PublishToQueue(QueueItem item, string queue, string hostname)
+        public int PublishToQueue(QueueItem item, string queue)
         {
             try
             {
-                var factory = new ConnectionFactory() { HostName = hostname };
-                using (var connection = factory.CreateConnection())
-                using (var channel = connection.CreateModel())
-                {
-                    channel.QueueDeclare(queue: queue,
-                                         durable: false,
-                                         exclusive: false,
-                                         autoDelete: false,
-                                         arguments: null);
+                var messageBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(item));
+                channel.BasicPublish(
+                    exchange: "",
+                    routingKey: queue,
+                    basicProperties: props,
+                    body: messageBytes);
 
-                    string message = JsonSerializer.Serialize(item);
-                    var body = Encoding.UTF8.GetBytes(message);
-
-                    channel.BasicPublish(exchange: "",
-                                         routingKey: queue,
-                                         basicProperties: null,
-                                         body: body);
-                    Debug.WriteLine(" [x] Sent {0}", message);
-                }
+                channel.BasicConsume(
+                    consumer: consumer,
+                    queue: replyQueueName,
+                    autoAck: true);
                 return 0;
             }
             catch (Exception ex)

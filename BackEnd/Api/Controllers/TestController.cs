@@ -3,6 +3,7 @@ using DAApi.Hubs;
 using DAApi.Hubs.Clients;
 using DAApi.Interfaces;
 using DAApi.Models;
+using DAApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -19,15 +20,10 @@ namespace DAApi.Controllers
     [ApiController]
     public class TestController : Controller
     {
-
-        private readonly IPublisherService _publisherService;
-        private readonly PublisherConfig _publisherConfig;
         private readonly IHubContext<ChatHub, IChatClient> _chatHub;
 
-        public TestController(IPublisherService publisherService, IOptionsMonitor<PublisherConfig> azureOptionsMonitor, IHubContext<ChatHub, IChatClient> chatHub)
+        public TestController(IHubContext<ChatHub, IChatClient> chatHub)
         {
-            _publisherService = publisherService;
-            _publisherConfig = azureOptionsMonitor.CurrentValue;
             _chatHub = chatHub;
         }
 
@@ -59,7 +55,7 @@ namespace DAApi.Controllers
         public async Task Post(ChatMessage message)
         {
             // run some logic...
-
+            
             await _chatHub.Clients.All.ReceiveMessage(message);
         }
     }

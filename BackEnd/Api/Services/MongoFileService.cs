@@ -41,8 +41,20 @@ namespace DAApi.Services
         /// </param>
         public void InsertResults(int fileId)
         {
-            MongoFile mongoFile = new MongoFile();
-            mongoFile.FileId = fileId;
+            Dictionary<string, int> temp = new()
+            {
+                { "null", -1 }
+            };
+
+            MongoFile mongoFile = new()
+            {
+                FileId = fileId,
+                NA = temp,
+                SAPercentage = -1,
+                SAMessage = "null",
+                SWACount = -1
+            };
+
             Create(mongoFile);
             return;
         }

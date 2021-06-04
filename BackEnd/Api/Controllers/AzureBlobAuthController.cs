@@ -59,7 +59,7 @@ namespace DAApi.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when trying to get the KeyCloak token");
+                Debug.WriteLine(ex);
                 return null;
             }
         }

@@ -18,21 +18,21 @@ namespace DAApi.Controllers
     [ApiController]
     public class AnalysisController : Controller
     {
-        private readonly IPublisherService _publisherService;
-        private readonly PublisherConfig _publisherConfig;
+        private readonly PublisherService _publisherService;
         private readonly IFileService _fileService;
         private readonly IAnalysisService _analysisService;
         private readonly AzureBlobStorageConfig _azureBlobStorageConfig;
         private readonly MongoFileService _mongoFileService;
+        private readonly RabbitMQConfig _rabbitMQConfig;
 
-        public AnalysisController(IPublisherService publisherService, IOptionsMonitor<PublisherConfig> publisherOptionsMonitor, IFileService fileService, IAnalysisService analysisService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor, MongoFileService mongoFileService)
+        public AnalysisController(PublisherService publisherService, IFileService fileService, IAnalysisService analysisService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor, MongoFileService mongoFileService, IOptionsMonitor<RabbitMQConfig> rabbitOptionsMonitor)
         {
             _publisherService = publisherService;
-            _publisherConfig = publisherOptionsMonitor.CurrentValue;
             _fileService = fileService;
             _analysisService = analysisService;
             _azureBlobStorageConfig = azureOptionsMonitor.CurrentValue;
             _mongoFileService = mongoFileService;
+            _rabbitMQConfig = rabbitOptionsMonitor.CurrentValue;
         }
 
         [HttpPost]
@@ -56,22 +56,23 @@ namespace DAApi.Controllers
 
                 _mongoFileService.InsertResults(fileId);
 
-                QueueItem queueItem = new QueueItem
+                QueueItem queueItem = new()
                 {
                     Id = fileId,
                     Name = file.Name,
                     Text = text
                 };
 
-                _publisherService.PublishToQueue(queueItem, "nameQueue", _publisherConfig.HostName);
-                _publisherService.PublishToQueue(queueItem, "sentimentQueue", _publisherConfig.HostName);
-                _publisherService.PublishToQueue(queueItem, "swearQueue", _publisherConfig.HostName);
+                _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.NameQueue);
+                _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.SwearQueue);
+                _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.SentimentQueue);
+                
 
                 return;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when trying to process the file");
+                Debug.WriteLine(ex);
                 return;
             }
         }

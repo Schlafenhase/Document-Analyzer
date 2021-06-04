@@ -50,7 +50,7 @@ namespace DAApi.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when trying to retrieve the files list from the database");
+                Debug.WriteLine(ex);
                 return null;
             }
         }
@@ -81,7 +81,7 @@ namespace DAApi.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when trying to get a file");
+                Debug.WriteLine(ex);
                 return null;
             }
             
