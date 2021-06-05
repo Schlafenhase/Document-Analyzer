@@ -10,7 +10,9 @@ namespace DAApi.Configuration
         /// <summary>
         /// Atributes of MongoDatabaseSettings
         /// </summary>
-        public string CollectionName { get; set; }
+        public string NameAnalyzerCollectionName { get; set; }
+        public string SentimentAnalyzerCollectionName { get; set; }
+        public string SwearAnalyzerCollectionName { get; set; }
         public string ConnectionString { get; set; }
         public string DatabaseName { get; set; }
     }
@@ -20,7 +22,9 @@ namespace DAApi.Configuration
         /// <summary>
         /// Atributes of IMongoDatabaseSettings
         /// </summary>
-        public string CollectionName { get; set; }
+        public string NameAnalyzerCollectionName { get; set; }
+        public string SentimentAnalyzerCollectionName { get; set; }
+        public string SwearAnalyzerCollectionName { get; set; }
         public string ConnectionString { get; set; }
         public string DatabaseName { get; set; }
     }

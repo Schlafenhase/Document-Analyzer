@@ -23,7 +23,8 @@ namespace DANameAnalyzer
             _employeeService = new EmployeeService(_context);
             _mongoFileService = new MongoFileService(config.MongoConnectionString, config.MongoDatabaseName, config.MongoCollectionName);
 
-            ReceiveFromQueue(config.HostName, config.QueueName);    
+            ReceiveFromQueue(config.HostName, config.QueueName);
+            return;
         }
 
         private static Config ReadConfig()
@@ -95,7 +96,8 @@ namespace DANameAnalyzer
             var result = NameAnalysisService.SearchEmployees(doc, _employeeService.GetEmployees());
 
             var fileData = _mongoFileService.Get(item.Id);
-            fileData.NA = result;
+            fileData.AnalysisDone = 1;
+            fileData.Result = result;
             _mongoFileService.Update(item.Id, fileData);
 
             return;

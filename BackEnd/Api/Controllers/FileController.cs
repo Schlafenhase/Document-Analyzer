@@ -64,27 +64,27 @@ namespace DAApi.Controllers
         /// <returns>
         /// Mongo database entry found
         /// </returns>
-        [Route("{id}")]
-        [HttpGet]
-        public ActionResult<MongoFile> Get(string id)
-        {
-            try
-            {
-                var file = _mongoFileService.Get(id);
+        //[Route("{id}")]
+        //[HttpGet]
+        //public ActionResult<MongoNameAnalysisFile> Get(string id)
+        //{
+        //    try
+        //    {
+        //        var file = _mongoFileService.Get(id);
 
-                if (file == null)
-                {
-                    return NotFound();
-                }
+        //        if (file == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return file;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                return null;
-            }
+        //        return file;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //        return null;
+        //    }
             
-        }
+        //}
     }
 }

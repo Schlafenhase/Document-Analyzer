@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DAApi.Services
@@ -12,9 +13,11 @@ namespace DAApi.Services
     public class MongoFileService
     {
         /// <summary>
-         /// Atribute that stores all mongoFiles
-         /// </summary>
-        private readonly IMongoCollection<MongoFile> _mongoFiles;
+        /// Atribute that stores all mongoFiles
+        /// </summary>
+        private readonly IMongoCollection<MongoNameAnalysisFile> _mongoNameAnalysisFiles;
+        private readonly IMongoCollection<MongoSentimentAnalysisFile> _mongoSentimentAnalysisFiles;
+        private readonly IMongoCollection<MongoSwearAnalysisFile> _mongoSwearAnalysisFiles;
 
         /// <summary>
         /// Constructor of MongoFileService
@@ -27,7 +30,9 @@ namespace DAApi.Services
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
-            _mongoFiles = database.GetCollection<MongoFile>(settings.CollectionName);
+            _mongoNameAnalysisFiles = database.GetCollection<MongoNameAnalysisFile>(settings.NameAnalyzerCollectionName);
+            _mongoSentimentAnalysisFiles = database.GetCollection<MongoSentimentAnalysisFile>(settings.SentimentAnalyzerCollectionName);
+            _mongoSwearAnalysisFiles = database.GetCollection<MongoSwearAnalysisFile>(settings.SwearAnalyzerCollectionName);
         }
 
         /// <summary>
@@ -41,21 +46,32 @@ namespace DAApi.Services
         /// </param>
         public void InsertResults(int fileId)
         {
-            Dictionary<string, int> temp = new()
-            {
-                { "null", -1 }
-            };
-
-            MongoFile mongoFile = new()
+            MongoNameAnalysisFile mongoNameAnalysisFile = new()
             {
                 FileId = fileId,
-                NA = temp,
-                SAPercentage = -1,
-                SAMessage = "null",
-                SWACount = -1
+                AnalysisDone = -1,
+                Result = null
             };
 
-            Create(mongoFile);
+            CreateNameAnalysis(mongoNameAnalysisFile);
+
+            MongoSwearAnalysisFile mongoSwearAnalysisFile = new()
+            {
+                FileId = fileId,
+                Result = -1
+            };
+
+            CreateSwearAnalysis(mongoSwearAnalysisFile);
+
+            MongoSentimentAnalysisFile mongoSentimentAnalysisFile = new()
+            {
+                FileId = fileId,
+                ResultPercentage = -101,
+                ResultMessage = "null"
+            };
+
+            CreateSentimentAnalysis(mongoSentimentAnalysisFile);
+
             return;
         }
 
@@ -68,8 +84,25 @@ namespace DAApi.Services
         /// <returns>
         /// Mongo entry found in the database
         /// </returns>
-        public MongoFile Get(string id) =>
-            _mongoFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
+        public Dictionary<string, string> Get(string id)
+        {
+            var mongoNameAnalysisFile = _mongoNameAnalysisFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
+            var mongoSwearAnalysisFile = _mongoSwearAnalysisFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
+            var mongoSentimentAnalysisFile = _mongoSentimentAnalysisFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
+
+            var mongoNameAnalysisJson = JsonSerializer.Serialize(mongoNameAnalysisFile);
+            var mongoSwearAnalysisJson = JsonSerializer.Serialize(mongoSwearAnalysisFile);
+            var mongoSentimentAnalysisJson = JsonSerializer.Serialize(mongoSentimentAnalysisFile);
+
+            Dictionary<string, string> result = new()
+            {
+                { "NameAnalysis", mongoNameAnalysisJson },
+                { "SwearAnalysis", mongoSwearAnalysisJson },
+                { "SentimentAnalysis", mongoSentimentAnalysisJson }
+            };
+
+            return result;
+        }
 
         /// <summary>
         /// Method that creates a new entry in the mongo database
@@ -80,10 +113,22 @@ namespace DAApi.Services
         /// <returns>
         /// Mongo file inserted
         /// </returns>
-        private MongoFile Create(MongoFile file)
+        private void CreateNameAnalysis(MongoNameAnalysisFile file)
         {
-            _mongoFiles.InsertOne(file);
-            return file;
+            _mongoNameAnalysisFiles.InsertOne(file);
+            return;
+        }
+
+        private void CreateSwearAnalysis(MongoSwearAnalysisFile file)
+        {
+            _mongoSwearAnalysisFiles.InsertOne(file);
+            return;
+        }
+
+        private void CreateSentimentAnalysis(MongoSentimentAnalysisFile file)
+        {
+            _mongoSentimentAnalysisFiles.InsertOne(file);
+            return;
         }
     }
 }

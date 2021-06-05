@@ -7,18 +7,13 @@ using System.Threading.Tasks;
 
 namespace DAApi.Models
 {
-    public class MongoFile
+    public class MongoSentimentAnalysisFile
     {
-        /// <summary>
-        /// Atributes of MongoFile
-        /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public int FileId { get; set; }
-        public Dictionary<string, int> NA { get; set; }
-        public int SAPercentage { get; set; }
-        public string SAMessage { get; set; }
-        public int SWACount { get; set; }
+        public int ResultPercentage { get; set; }
+        public string ResultMessage { get; set; }
     }
 }
