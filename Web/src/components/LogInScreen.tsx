@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Button from "./UI/Button";
+import {Button, TextField} from "@material-ui/core";
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import axios from "axios";
-import { BaseURL } from "../constants";
+import {BaseURL} from "../constants";
 import logo from "../assets/da-logo-words-vertical-raster.png";
-import signInIcon from "../assets/signIn-icon.svg";
-import Entry from "./UI/Entry";
 import schlafenhaseLogo from "../assets/schlafenhase-blue-transparent.png";
 import gitHubIcon from "../assets/github-icon.svg";
 import Swal from "sweetalert2";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const Div = styled.div`
   overflow: hidden;
@@ -108,30 +108,77 @@ const SchlafenhaseLogo = styled.img`
   margin: 20px auto 0 auto;
 `;
 
+const CustomButton = withStyles((theme) => ({
+  root: {
+    background: 'linear-gradient(45deg, #184f81 30%, #5490bd 90%)',
+    boxShadow: '0 3px 5px 2px rgba(30, 30, 30, .3)',
+  },
+  label: {
+    textTransform: "capitalize",
+    fontSize: "14pt"
+  }
+}))(Button);
+
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+}));
+
+const StyledTextField = withStyles((theme) => ({
+  root: {
+    marginBottom: "20px",
+    "& .MuiFormLabel-root": {
+      color: theme.palette.secondary.main
+    }
+  }
+}))(TextField);
+
 const LogInScreen = (props: any) => {
   const nameState = useState("");
   const passwordState = useState("");
   const history = useHistory();
 
   /**
+   * Handles key events
+   */
+  function handleKeyEvent(event: any)  {
+    if (event.charCode === 13) {
+      // Enter key. Sign In
+      login();
+    }
+  }
+
+  /**
    * Authenticates user in API from sign in data
    */
   const login = async () => {
     try {
-      const response = await axios.post(BaseURL + "/Api/AuthManagement/Login", {
-        email: nameState[0],
-        password: passwordState[0],
-      });
-      const token = response.data.token;
+      const response = await axios.post( BaseURL + "/Api/KeyCloakAuth",
+          {
+            name: nameState[0],
+            password: passwordState[0]
+          });
+      const token = response.data.access_token;
       props.setToken(token);
-      localStorage.setItem("token", token);
-      history.push("/home");
-      window.location.reload();
+      if (token !== undefined) {
+        localStorage.setItem("token", token);
+        history.push("/home");
+        window.location.reload();
+      } else {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Incorrect username/email or password',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      }
     } catch (error) {
       Swal.fire({
         position: 'center',
         icon: 'error',
-        title: 'Incorrect username/email or password',
+        title: 'Error signing in',
         showConfirmButton: false,
         timer: 1000
       })
@@ -144,12 +191,13 @@ const LogInScreen = (props: any) => {
         <Logo src={logo}/>
         <h2>upload -{">"} analyze -{">"} check.</h2>
         <InputLabel>Welcome back! Sign in here:</InputLabel>
-        <Entry label="Username/Email" state={nameState} />
-        <Entry type="password" label="Password" state={passwordState} />
-        <Button onClick={login} style={{height: 50}}>
+        <StyledTextField id="input-email" type="text" label="Email" variant="outlined" size="small" onChange={(e) => nameState[1](e.target.value)}/>
+        <StyledTextField id="input-password" type="password" label="Password" variant="outlined" size="small" onChange={(e) => passwordState[1](e.target.value)} onKeyPress={handleKeyEvent} />
+        {/*<Entry label="Username/Email" state={nameState} />*/}
+        {/*<Entry type="password" label="Password" state={passwordState} />*/}
+        <CustomButton variant="contained" color="primary" onClick={login} style={{height: 50}} startIcon={<ArrowForwardIcon />}>
           Sign In
-          <img src={signInIcon}/>
-        </Button>
+        </CustomButton>
         <HBar/>
         <SchlafenhaseLogo src={schlafenhaseLogo}/>
         <BottomLabel>2021. Schlafenhase <span className="blue">[BLUE]</span></BottomLabel>
