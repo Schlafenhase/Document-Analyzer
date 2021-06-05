@@ -1,0 +1,68 @@
+version: "3.9"
+services:
+  db-sql:
+    image: mcr.microsoft.com/mssql/server
+    environment: 
+      - "ACCEPT_EULA=Y"
+      - "SA_PASSWORD=@Schlafenhase2021"
+    ports:
+      - "1433:1433"
+    volumes: 
+      - mssql:/var/opt/mssql
+    container_name: DADB
+  db-mongo:
+    image: mongo
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - mongodb:/data/db
+    container_name: DAM
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    environment: 
+      - "KEYCLOAK_USER=Schlafenhase"
+      - "KEYCLOAK_PASSWORD=@Schlafenhase2021"
+    ports:
+      - "8080:8080"
+    container_name: keycloak
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: 
+      - "5672:5672"
+      - "15672:15672"
+    hostname: 
+      "rabbit"
+    container_name: rabbitmq
+  restapi-1:
+    build: ./BackEnd/Api
+    ports:
+      - "8082:80"
+    container_name: main-api-1
+  restapi-2:
+    build: ./BackEnd/Api
+    ports:
+      - "8083:80"
+    container_name: main-api-2
+  api-lb:
+    build: ./BackEnd/Api/nginx
+    ports:
+      - "8084:80"
+    container_name: lb-api
+  web1:
+    build: ./Web
+    ports:
+      - "5001:80"
+    container_name: web1
+  web2:
+    build: ./Web
+    ports:
+      - "5002:80"
+    container_name: web2
+  lb-web:
+    build: ./Web/nginx/lb
+    ports:
+      - "5003:80"
+    container_name: lb-web
+volumes:
+  mssql:
+  mongodb:
