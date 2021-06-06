@@ -20,8 +20,7 @@
     <PackageReference Include="MongoDB.Driver" Version="2.12.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
-    <PackageReference Include="Spire.Doc" Version="9.4.18" />
-    <PackageReference Include="Spire.PDF" Version="7.5.7" />
+    <PackageReference Include="Spire.Office" Version="6.4.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 

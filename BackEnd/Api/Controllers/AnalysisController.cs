@@ -63,10 +63,9 @@ namespace DAApi.Controllers
                     Text = text
                 };
 
+                _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.SentimentQueue);
                 _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.NameQueue);
                 _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.SwearQueue);
-                _publisherService.PublishToQueue(queueItem, _rabbitMQConfig.SentimentQueue);
-                
 
                 return;
             }

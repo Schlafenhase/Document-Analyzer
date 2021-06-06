@@ -3,6 +3,8 @@ using DAApi.Models;
 using DAApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -64,27 +66,27 @@ namespace DAApi.Controllers
         /// <returns>
         /// Mongo database entry found
         /// </returns>
-        //[Route("{id}")]
-        //[HttpGet]
-        //public ActionResult<MongoNameAnalysisFile> Get(string id)
-        //{
-        //    try
-        //    {
-        //        var file = _mongoFileService.Get(id);
+        [Route("{id}")]
+        [HttpGet]
+        public string Get(string id)
+        {
+            try
+            {
+                var fileData = _mongoFileService.Get(id);
 
-        //        if (file == null)
-        //        {
-        //            return NotFound();
-        //        }
+                if (fileData == null)
+                {
+                    return null;
+                }
 
-        //        return file;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine(ex);
-        //        return null;
-        //    }
-            
-        //}
+                return fileData;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return null;
+            }
+
+        }
     }
 }
