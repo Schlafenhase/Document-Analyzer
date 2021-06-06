@@ -33,28 +33,46 @@ services:
     hostname: 
       "rabbit"
     container_name: rabbitmq
-  restapi-1:
+  restapi:
     build: ./BackEnd/Api
     ports:
       - "8082:80"
     container_name: main-api-1
   restapi-2:
-    build: ./BackEnd/Api
+    image: document-analyzer_restapi
     ports:
       - "8083:80"
     container_name: main-api-2
-  api-lb:
+  restapi-lb:
     build: ./BackEnd/Api/nginx
     ports:
       - "8084:80"
     container_name: lb-api
-  web1:
+  api-sent:
+    build: ./BackEnd/Services/SentimentAnalyzer
+    container_name: sentiment-api-1
+  api-sent-2:
+    image: document-analyzer_api-sent
+    container_name: sentiment-api-2
+  api-swear:
+    build: ./BackEnd/Services/SwearAnalyzer
+    container_name: swear-api-1
+  api-swear-2:
+    image: document-analyzer_api-swear
+    container_name: swear-api-2
+  api-name:
+    build: ./BackEnd/Services/NameAnalyzer
+    container_name: name-api-1
+  api-name-2:
+    image: document-analyzer_api-name
+    container_name: name-api-2
+  web:
     build: ./Web
     ports:
       - "5001:80"
     container_name: web1
-  web2:
-    build: ./Web
+  web-2:
+    image: document-analyzer_web
     ports:
       - "5002:80"
     container_name: web2

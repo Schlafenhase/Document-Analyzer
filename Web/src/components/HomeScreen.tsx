@@ -97,9 +97,15 @@ const CustomDataGrid = withStyles((theme) => ({
 }))(DataGrid);
 
 const columns: GridColumns = [
-  { field: 'id', headerName: 'ID', description: 'Employee ID number', flex: 0.5, headerAlign: 'center' },
+  { field: 'id', headerName: 'ID', description: 'Employee ID Number', flex: 0.5, headerAlign: 'center' },
   { field: 'name', headerName: 'File Name', description: 'File Name', flex: 0.5, headerAlign: 'center' },
   { field: 'container', headerName: 'Container', description: 'Container Name', flex: 0.5, headerAlign: 'center' }
+];
+
+const columnsDetail: GridColumns = [
+  { field: 'id', headerName: 'ID', description: 'Employee Name ID', flex: 0.5, headerAlign: 'center', hide: true },
+  { field: 'name', headerName: 'Name', description: 'Employee Name', flex: 0.5, headerAlign: 'center' },
+  { field: 'count', headerName: 'Count', description: 'Number of times present in file', flex: 0.5, headerAlign: 'center' }
 ];
 
 const HomeScreen = (props: any) => {
@@ -107,6 +113,9 @@ const HomeScreen = (props: any) => {
   const [data, setData] = useState([]);
   const [fileData, setDataFile]: any = useState({});
   const [status, setStatus]: any = useState();
+  const [swAnalysis, setSwAnalysis]: any = useState();
+  const [sentAnalysisPer, setSentAnalysisPer]: any = useState();
+  const [sentAnalysisMsg, setSentAnalysisMsg]: any = useState();
   const classes = useStyles();
 
   const viewContext = useContext(SharedViewStateContext);
@@ -148,7 +157,7 @@ const HomeScreen = (props: any) => {
   }, [connection]);
 
   // if (!props.token) {
-  //   //window.location.reload();
+  //   // window.location.reload();
   //   return null;
   // }
 
@@ -157,15 +166,24 @@ const HomeScreen = (props: any) => {
    * @param file File ID to check detail info
    */
   const getDetail = async (file: any) => {
-    const response = await axios.get(BaseURL + "/Api/Mongo/" + file.id, {
+    // Make request in API
+    const response = await axios.get(BaseURL + "/Api/File/" + file.id, {
       headers: {
         Authorization: "Bearer " + props.token,
       },
     });
-    const dataFile = Object.keys(response.data.employees).map((key) => ({
+
+    // Convert data to table list
+    const dataFile = Object.keys(response.data.NameAnalysis.Result).map((key, index) => ({
+      id: index,
       name: key,
-      count: response.data.employees[key],
+      count: response.data.NameAnalysis.Result[key],
     })) as any;
+
+    // Set variables to be updated by React
+    setSwAnalysis(response.data.SwearAnalysis.Result);
+    setSentAnalysisPer(response.data.SentimentAnalysis.ResultPercentage);
+    setSentAnalysisMsg(response.data.SentimentAnalysis.ResultMessage);
     setDataFile({ title: file.name, data: dataFile });
   };
 
@@ -173,6 +191,7 @@ const HomeScreen = (props: any) => {
    * Gets files from server
    */
   const getFiles = async () => {
+    console.log(props);
     const response = await axios.get(BaseURL + "/Api/File/Files", {
       headers: {
         Authorization: "Bearer " + props.token,
@@ -182,13 +201,24 @@ const HomeScreen = (props: any) => {
   };
 
   /**
+   * Status control string method
+   */
+  function statusControl() {
+    setStatus("Uploading to Azure Blob Storage...")
+    setTimeout(setStatus("Analyzing File...", 5000))
+  }
+
+  /**
    * Upload file to server for document analysis
    * @param name File name to be analyzed
    */
   const uploadFile = async (name: String) => {
     const response = await axios.post(
-      BaseURL + "/Api/NLP",
-      { name },
+      BaseURL + "/Api/Analysis",
+      {
+            name: name,
+            container: 'dcanalyzerblob'
+            },
       {
         headers: {
           Authorization: "Bearer " + props.token,
@@ -215,27 +245,35 @@ const HomeScreen = (props: any) => {
               </Row>
               {/*<Table onClickItem={getDetail} data={data} />*/}
               <div style={{ height: 430, width: '100%', backgroundColor: "white", borderRadius: "15px", marginBottom: "20px", marginTop: "20px" }}>
-                <CustomDataGrid rows={data} columns={columns} pageSize={6} disableSelectionOnClick onRowClick={getDetail} />
+                <CustomDataGrid rows={data} columns={columns} pageSize={6} disableSelectionOnClick onRowClick={(rowData) => getDetail(rowData.row)} />
               </div>
-              <FileLabel>Upload new file:</FileLabel>
-
+              <FileLabel>System Status:</FileLabel>
               {(status != 'Ready for Analysis') ? (
-                <ProcessingLabel>STATUS: {status}</ProcessingLabel>
+                <ProcessingLabel>{status}</ProcessingLabel>
               ) : (
-                <div>
-                  <Dropzone
-                    start={() => setStatus("Uploading to Azure Blob Storage...")}
-                    uploaded={uploadFile}
-                  />
-                </div>
+                  <ProcessingLabel>Ready for Analysis</ProcessingLabel>
               )}
-
+              <FileLabel>Upload new file:</FileLabel>
+              <div>
+                { props.token &&
+                  <Dropzone
+                      start={() => statusControl()}
+                      uploaded={uploadFile}
+                  />
+                }
+              </div>
               {fileData.title ? (
                 [
                   <FileLabel>Selected File: {fileData.title}</FileLabel>,
-                  <EmployeeResultsTable data={fileData.data} />,
+                  <FileLabel style={{color:"#f0d980", fontStyle:"normal", fontWeight:"bold"}}>Swear Analysis:</FileLabel>,
+                  <ProcessingLabel>There are {swAnalysis} swear words</ProcessingLabel>,
+                  <FileLabel style={{color:"#f0d980", fontStyle:"normal", fontWeight:"bold"}}>Sentimental Analysis:</FileLabel>,
+                  <ProcessingLabel>Positivity is {sentAnalysisPer}%</ProcessingLabel>,
+                  <ProcessingLabel>Content is mostly {sentAnalysisMsg}</ProcessingLabel>,
+                  <FileLabel style={{color:"#f0d980", fontStyle:"normal", fontWeight:"bold"}}>Name Analysis:</FileLabel>,
+                  // <EmployeeResultsTable data={fileData.data} />,
                   <div style={{ height: 430, width: '100%', backgroundColor: "white", borderRadius: "15px", marginBottom: "20px", marginTop: "20px" }}>
-                    <CustomDataGrid rows={fileData.data} columns={columns} pageSize={6} disableSelectionOnClick />
+                    <CustomDataGrid rows={fileData.data} columns={columnsDetail} pageSize={6} disableSelectionOnClick />
                   </div>,
                 ]
               ) : (
