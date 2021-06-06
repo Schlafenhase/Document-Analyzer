@@ -1,7 +1,9 @@
 ﻿using DAApi.Configuration;
 using DAApi.Interfaces;
 using DAApi.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,24 +86,37 @@ namespace DAApi.Services
         /// <returns>
         /// Mongo entry found in the database
         /// </returns>
-        public Dictionary<string, string> Get(string id)
+        public string Get(string id)
         {
             var mongoNameAnalysisFile = _mongoNameAnalysisFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
             var mongoSwearAnalysisFile = _mongoSwearAnalysisFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
             var mongoSentimentAnalysisFile = _mongoSentimentAnalysisFiles.Find(file => file.FileId == int.Parse(id)).FirstOrDefault();
 
-            var mongoNameAnalysisJson = JsonSerializer.Serialize(mongoNameAnalysisFile);
-            var mongoSwearAnalysisJson = JsonSerializer.Serialize(mongoSwearAnalysisFile);
-            var mongoSentimentAnalysisJson = JsonSerializer.Serialize(mongoSentimentAnalysisFile);
-
-            Dictionary<string, string> result = new()
+            BsonDocument NameAnalysisResult = new()
             {
-                { "NameAnalysis", mongoNameAnalysisJson },
-                { "SwearAnalysis", mongoSwearAnalysisJson },
-                { "SentimentAnalysis", mongoSentimentAnalysisJson }
+                { "AnalysisDone", mongoNameAnalysisFile.AnalysisDone },
+                { "Result", mongoNameAnalysisFile.Result.ToBsonDocument() }
             };
 
-            return result;
+            BsonDocument SwearAnalysisResult = new()
+            {
+                { "Result", mongoSwearAnalysisFile.Result }
+            };
+
+            BsonDocument SentimentAnalysisResult = new()
+            {
+                { "ResultPercentage", mongoSentimentAnalysisFile.ResultPercentage },
+                { "ResultMessage", mongoSentimentAnalysisFile.ResultMessage }
+            };
+
+            BsonDocument result = new()
+            {
+                { "NameAnalysis", NameAnalysisResult },
+                { "SwearAnalysis", SwearAnalysisResult },
+                { "SentimentAnalysis", SentimentAnalysisResult }
+            };
+
+            return result.ToJson();
         }
 
         /// <summary>

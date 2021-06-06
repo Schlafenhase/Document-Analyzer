@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/bson"
@@ -58,7 +57,8 @@ func connectToMongo(connectionString string, databaseName string, collectionName
 	if err != nil {
 		log.Fatal(err)
 	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	ctx := context.Background()
 	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
@@ -69,29 +69,28 @@ func connectToMongo(connectionString string, databaseName string, collectionName
 }
 
 func makeAnalysisAux(text string, url string) (float64, string) {
-	bodyJson := fmt.Sprintf(`{"text":"%s"}`, text)
+	values := map[string]string{"text": text}
+	json_data, err := json.Marshal(values)
 
-	var jsonStr = []byte(bodyJson)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	resp, err := http.Post(url, "application/json",
+		bytes.NewBuffer(json_data))
 
-	var result map[string]interface{}
-	json.Unmarshal([]byte(string(body)), &result)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	percentage := result["result"].(map[string]interface{})["polarity"].(float64)
+	var res map[string]interface{}
+
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	percentage := res["result"].(map[string]interface{})["polarity"].(float64)
 	percentage *= 100
 
-	message := result["result"].(map[string]interface{})["type"].(string)
+	message := res["result"].(map[string]interface{})["type"].(string)
 
 	return percentage, message
 }
@@ -99,15 +98,7 @@ func makeAnalysisAux(text string, url string) (float64, string) {
 func makeAnalysis(item QueueItem, url string, mongoFiles *mongo.Collection, ctx context.Context) {
 	resultPercentage, resultMessage := makeAnalysisAux(item.Text, url)
 
-	mongoFiles.ReplaceOne(
-		ctx,
-		bson.M{"FileId": item.Id},
-		bson.M{
-			"FileId":           item.Id,
-			"ResultPercentage": int(resultPercentage),
-			"ResultMessage":    resultMessage,
-		},
-	)
+	mongoFiles.FindOneAndReplace(ctx, bson.M{"FileId": item.Id}, bson.M{"FileId": item.Id, "ResultPercentage": int(resultPercentage), "ResultMessage": resultMessage})
 
 	return
 }
