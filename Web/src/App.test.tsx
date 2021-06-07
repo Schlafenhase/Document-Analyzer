@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import App from "./App";
 import LogInScreen from "./components/LogInScreen";
 import HomeScreen from "./components/HomeScreen";
-import UserNamesScreen from "./components/UserNamesScreen";
 
 test("renders main page", () => {
   render(<App />);
