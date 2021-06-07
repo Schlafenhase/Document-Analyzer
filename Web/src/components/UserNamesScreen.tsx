@@ -117,6 +117,7 @@ const UserNamesScreen = (props: any) => {
   };
 
   useEffect(() => {
+    // Initially fetch employee data to populate table
     if (props.token) getEmployees();
   }, [props.token]);
 

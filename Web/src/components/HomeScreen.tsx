@@ -116,6 +116,7 @@ const HomeScreen = (props: any) => {
   const [swAnalysis, setSwAnalysis]: any = useState();
   const [sentAnalysisPer, setSentAnalysisPer]: any = useState();
   const [sentAnalysisMsg, setSentAnalysisMsg]: any = useState();
+  const [nameAnalysisDone, setNameAnalysisDone]: any = useState();
   const classes = useStyles();
 
   const viewContext = useContext(SharedViewStateContext);
@@ -136,16 +137,19 @@ const HomeScreen = (props: any) => {
   }, []);
 
   useEffect(() => {
+    // Initially fetch files from server to display on table
     if (props.token) getFiles();
   }, [props.token]);
 
   useEffect(() => {
+    // Detect and reflect changes in database
     if (connection) {
       // @ts-ignore
       connection.start()
           .then((result: any) => {
             console.log('Connected to web socket');
 
+            // Reflect changes
             // @ts-ignore
             connection.on('ReceiveMessage', message => {
               let msg = message.message;
@@ -173,18 +177,23 @@ const HomeScreen = (props: any) => {
       },
     });
 
-    // Convert data to table list
-    const dataFile = Object.keys(response.data.NameAnalysis.Result).map((key, index) => ({
-      id: index,
-      name: key,
-      count: response.data.NameAnalysis.Result[key],
-    })) as any;
+    if (response.data.NameAnalysis.Result != null) {
+      setNameAnalysisDone(true);
+      // Convert data to table list
+      const dataFile = Object.keys(response.data.NameAnalysis.Result).map((key, index) => ({
+        id: index,
+        name: key,
+        count: response.data.NameAnalysis.Result[key],
+      })) as any;
 
-    // Set variables to be updated by React
-    setSwAnalysis(response.data.SwearAnalysis.Result);
-    setSentAnalysisPer(response.data.SentimentAnalysis.ResultPercentage);
-    setSentAnalysisMsg(response.data.SentimentAnalysis.ResultMessage);
-    setDataFile({ title: file.name, data: dataFile });
+      // Set variables to be updated by React
+      setSwAnalysis(response.data.SwearAnalysis.Result);
+      setSentAnalysisPer(response.data.SentimentAnalysis.ResultPercentage);
+      setSentAnalysisMsg(response.data.SentimentAnalysis.ResultMessage);
+      setDataFile({title: file.name, data: dataFile});
+    } else {
+      setNameAnalysisDone(false);
+    }
   };
 
   /**
@@ -227,8 +236,8 @@ const HomeScreen = (props: any) => {
     );
 
     console.log(response.data);
-    setTimeout(getFiles, 1000);
-    setTimeout(setStatus, 2000);
+    setTimeout(getFiles, 5000);
+    setTimeout(setStatus, 5000);
   };
 
   return (
@@ -266,12 +275,13 @@ const HomeScreen = (props: any) => {
                 [
                   <FileLabel>Selected File: {fileData.title}</FileLabel>,
                   <FileLabel style={{color:"#f0d980", fontStyle:"normal", fontWeight:"bold"}}>Swear Analysis:</FileLabel>,
-                  <ProcessingLabel>There are {swAnalysis} swear words</ProcessingLabel>,
+                  <ProcessingLabel>{swAnalysis !== -1 ? `There are ${swAnalysis} swear words` : "Swear Analysis Pending..." }</ProcessingLabel>,
                   <FileLabel style={{color:"#f0d980", fontStyle:"normal", fontWeight:"bold"}}>Sentimental Analysis:</FileLabel>,
-                  <ProcessingLabel>Positivity is {sentAnalysisPer}%</ProcessingLabel>,
-                  <ProcessingLabel>Content is mostly {sentAnalysisMsg}</ProcessingLabel>,
+                  <ProcessingLabel>{swAnalysis !== -1 ? `Positivity is ${sentAnalysisPer}%` : "Sentimental Analysis Pending..."}</ProcessingLabel>,
+                  <ProcessingLabel>{swAnalysis !== -1 ? `Content is mostly ${sentAnalysisMsg}` : ""}</ProcessingLabel>,
                   <FileLabel style={{color:"#f0d980", fontStyle:"normal", fontWeight:"bold"}}>Name Analysis:</FileLabel>,
                   // <EmployeeResultsTable data={fileData.data} />,
+                  !nameAnalysisDone ? <ProcessingLabel>Name Analysis Pending...</ProcessingLabel> :
                   <div style={{ height: 430, width: '100%', backgroundColor: "white", borderRadius: "15px", marginBottom: "20px", marginTop: "20px" }}>
                     <CustomDataGrid rows={fileData.data} columns={columnsDetail} pageSize={6} disableSelectionOnClick />
                   </div>,
