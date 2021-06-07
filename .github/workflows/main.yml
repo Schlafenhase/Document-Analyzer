@@ -150,7 +150,7 @@ jobs:
     
     defaults:
       run:
-        working-directory: ./API/DocumentAnalyzerAPI
+        working-directory: ./BackEnd/Api
   
     runs-on: windows-latest
     
