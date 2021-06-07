@@ -7,6 +7,9 @@ namespace DAApi.Configuration
 {
     public class KeyCloakConfig
     {
+        /// <summary>
+        /// Atributes of KeyCloakConfig
+        /// </summary>
         public string TokenURL { get; set; }
         public string ClientId { get; set; }
     }

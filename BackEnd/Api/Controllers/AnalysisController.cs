@@ -18,6 +18,9 @@ namespace DAApi.Controllers
     [ApiController]
     public class AnalysisController : Controller
     {
+        /// <summary>
+        /// Atributes that handle the services and configurations
+        /// </summary>
         private readonly PublisherService _publisherService;
         private readonly IFileService _fileService;
         private readonly IAnalysisService _analysisService;
@@ -25,6 +28,27 @@ namespace DAApi.Controllers
         private readonly MongoFileService _mongoFileService;
         private readonly RabbitMQConfig _rabbitMQConfig;
 
+        /// <summary>
+        /// Constructor of AnalysisController
+        /// </summary>
+        /// <param name="publisherService">
+        /// Publisher service interface
+        /// </param>
+        /// <param name="fileService">
+        /// File service interface
+        /// </param>
+        /// <param name="analysisService">
+        /// Analysis interface
+        /// </param>
+        /// <param name="azureOptionsMonitor">
+        /// Azure options
+        /// </param>
+        /// <param name="mongoFileService">
+        /// Mongo service interface
+        /// </param>
+        /// <param name="rabbitOptionsMonitor">
+        /// RabbitMQ options
+        /// </param>
         public AnalysisController(PublisherService publisherService, IFileService fileService, IAnalysisService analysisService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor, MongoFileService mongoFileService, IOptionsMonitor<RabbitMQConfig> rabbitOptionsMonitor)
         {
             _publisherService = publisherService;
@@ -35,6 +59,12 @@ namespace DAApi.Controllers
             _rabbitMQConfig = rabbitOptionsMonitor.CurrentValue;
         }
 
+        /// <summary>
+        /// Method that sends a file to analyze
+        /// </summary>
+        /// <param name="file">
+        /// File to be analyzed
+        /// </param>
         [HttpPost]
         public void AnalyzeFile([FromBody] File file)
         {

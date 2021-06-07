@@ -7,6 +7,8 @@ from Services import SwearService as ss
 mongoFileService = None
 swearAnalysisService = ss.SwearAnalysisService("Services/profanity.sav", "Services/vectorizer.sav")
 
+# Function that reads a config file
+# Returns the configuration data found
 def readConfig():
     f = open("appsettings.json")
     data = f.read()
@@ -14,6 +16,7 @@ def readConfig():
     f.close()
     return data
 
+# Function that makes the swear analysis
 def makeAnalysis(item):
     result = swearAnalysisService.makeSwearAnalysis(item.Text)
     fileData = mongoFileService.get(item.Id)
@@ -22,6 +25,7 @@ def makeAnalysis(item):
 
     return
 
+# Auxiliary function that receives data from a queue
 def receiveFromQueueAux(ch, method, props, body):
     print("Request received, starting Swear Analysis...")
     item = json.loads(body, object_hook=lambda d: SimpleNamespace(**d))
@@ -40,6 +44,7 @@ def receiveFromQueueAux(ch, method, props, body):
 
     return
 
+# Function that receives data from a queue
 def receiveFromQueue(hostName, queueName):
     connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=hostName))
@@ -53,6 +58,7 @@ def receiveFromQueue(hostName, queueName):
     channel.start_consuming()
     return
 
+# Main function
 def main():
     global mongoFileService
 

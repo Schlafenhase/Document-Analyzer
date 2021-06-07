@@ -134,12 +134,30 @@ namespace DAApi.Services
             return;
         }
 
+        /// <summary>
+        /// Method that creates a new entry in the mongo database
+        /// </summary>
+        /// <param name="file">
+        /// Mongo file to be inserted
+        /// </param>
+        /// <returns>
+        /// Mongo file inserted
+        /// </returns>
         private void CreateSwearAnalysis(MongoSwearAnalysisFile file)
         {
             _mongoSwearAnalysisFiles.InsertOne(file);
             return;
         }
 
+        /// <summary>
+        /// Method that creates a new entry in the mongo database
+        /// </summary>
+        /// <param name="file">
+        /// Mongo file to be inserted
+        /// </param>
+        /// <returns>
+        /// Mongo file inserted
+        /// </returns>
         private void CreateSentimentAnalysis(MongoSentimentAnalysisFile file)
         {
             _mongoSentimentAnalysisFiles.InsertOne(file);

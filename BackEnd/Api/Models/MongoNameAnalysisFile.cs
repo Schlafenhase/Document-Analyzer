@@ -10,7 +10,7 @@ namespace DAApi.Models
     public class MongoNameAnalysisFile
     {
         /// <summary>
-        /// Atributes of MongoFile
+        /// Atributes of MongoNameAnalysisFile
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

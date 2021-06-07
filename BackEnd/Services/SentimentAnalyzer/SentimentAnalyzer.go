@@ -30,12 +30,15 @@ type QueueItem struct {
 	Text string
 }
 
+// Function that handles error messages
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
 	}
 }
 
+// Function that reads a config file
+// Returns the configuration data found
 func readConfig() Config {
 	jsonData, err := ioutil.ReadFile("appsettings.json")
 	if err != nil {
@@ -52,6 +55,8 @@ func readConfig() Config {
 	return data
 }
 
+// Function that connects to the mongo database
+// Returns the collection of the database
 func connectToMongo(connectionString string, databaseName string, collectionName string) (*mongo.Collection, context.Context) {
 	client, err := mongo.NewClient(options.Client().ApplyURI(connectionString))
 	if err != nil {
@@ -68,6 +73,8 @@ func connectToMongo(connectionString string, databaseName string, collectionName
 	return collection, ctx
 }
 
+// Auxiliary function that makes the sentiment analysis
+// Results of the analysis
 func makeAnalysisAux(text string, url string) (float64, string) {
 	values := map[string]string{"text": text}
 	json_data, err := json.Marshal(values)
@@ -95,6 +102,7 @@ func makeAnalysisAux(text string, url string) (float64, string) {
 	return percentage, message
 }
 
+// Function that makes the sentiment analysis
 func makeAnalysis(item QueueItem, url string, mongoFiles *mongo.Collection, ctx context.Context) {
 	resultPercentage, resultMessage := makeAnalysisAux(item.Text, url)
 
@@ -103,6 +111,7 @@ func makeAnalysis(item QueueItem, url string, mongoFiles *mongo.Collection, ctx 
 	return
 }
 
+// Function that receives an item from the queue
 func receiveFromQueue(hostName string, queueName string, apiURL string, mongoFiles *mongo.Collection, ctx context.Context) {
 	conn, err := amqp.Dial("amqp://guest:guest@" + hostName + ":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -178,6 +187,7 @@ func receiveFromQueue(hostName string, queueName string, apiURL string, mongoFil
 	<-forever
 }
 
+// Main function
 func main() {
 	config := readConfig()
 	mongoFiles, ctx := connectToMongo(config.MongoConnectionString, config.MongoDatabaseName, config.MongoCollectionName)

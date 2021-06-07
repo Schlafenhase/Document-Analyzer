@@ -15,6 +15,18 @@ namespace DANameAnalyzer.Services
         /// </summary>
         private readonly IMongoCollection<MongoFile> _mongoFiles;
 
+        /// <summary>
+        /// Constructor of MongoFileService
+        /// </summary>
+        /// <param name="connectionString">
+        /// String with the connection string
+        /// </param>
+        /// <param name="databaseName">
+        /// String with the database name
+        /// </param>
+        /// <param name="collectionName">
+        /// String with the collection name
+        /// </param>
         public MongoFileService(string connectionString, string databaseName, string collectionName)
         {
             var client = new MongoClient(connectionString);
@@ -35,7 +47,15 @@ namespace DANameAnalyzer.Services
         public MongoFile Get(int id) =>
             _mongoFiles.Find(file => file.FileId == id).FirstOrDefault();
 
-
+        /// <summary>
+        /// Method that updates an item in the database
+        /// </summary>
+        /// <param name="id">
+        /// String with the file id
+        /// </param>
+        /// <param name="fileIn">
+        /// File that is going to replace
+        /// </param>
         public void Update(int id, MongoFile fileIn) =>
             _mongoFiles.ReplaceOne(file => file.FileId == id, fileIn);
     }
