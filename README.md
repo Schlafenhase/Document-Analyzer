@@ -102,7 +102,7 @@ For deployment on a live system, run **docker-compose up** on the root directory
       <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" height=110></p>
     </td>
     <td>
-      <p align=center><img src="https://docs.microsoft.com/es-es/dotnet/images/hub/netcore.svg" width=130 height=100></p>
+      <p align=center><img src="https://docs.microsoft.com/es-es/dotnet/images/hub/netcore.svg" width=110 height=80></p>
     </td>
     <td>
       <p align=center><img src="https://infinapps.com/wp-content/uploads/2018/10/mongodb-logo.png" height=130></p>
@@ -114,10 +114,10 @@ For deployment on a live system, run **docker-compose up** on the root directory
       <p align=center><img src="https://www.jasoft.org/Blog/image.axd?picture=/2018/azure-storage-blob-logo.png" width=100 height=100></p>
     </td>
     <td>
-      <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/768px-Python-logo-notext.svg.png" width=100 height=90></p>
+      <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/768px-Python-logo-notext.svg.png" width=80 height=80></p>
     </td>
     <td>
-      <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Go_Logo_Blue.svg/1200px-Go_Logo_Blue.svg.png" width=100 height=40></p>
+      <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Go_Logo_Blue.svg/1200px-Go_Logo_Blue.svg.png" width=90 height=35></p>
     </td>
   </tr>
   
