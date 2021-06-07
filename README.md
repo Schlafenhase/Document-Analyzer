@@ -6,13 +6,14 @@ Document Analyzer is a three-layered app to process and analyze company document
 
 Main features:
 
-* Classic gradient-inspired look
-* Simple way to upload and check processed documents and their information
-* Automatic document analysis with Natural Language Processing (NLP)
+* Classic gradient-inspired look with Material UI
+* Simple way to upload and check documents for swear, name and sentiment analysis
+* Automatic document analysis with Natural Language Processing (NLP) and AI neural networks
 * Support for **.txt**, **.docx** and **.pdf** files
-* Basic Authentication (BA) sign-in system
+* Single-Sign-On (SSO) authentication system
 * Integrated app architecture for easy deployment
 * Responsive cross-platform compatibility
+* Seamless Docker Compose deployment
 
 ## Photos 📷
 
@@ -34,12 +35,22 @@ Software you need to install to run this project:
 
 ```
 Website Client - React version 17 or higher
-Services REST API - Visual Studio 2019
+Services REST API and Name Analyzer - .NET Core 5.0.6 or higher
 Database - MongoDB version 4.4 or higher, Microsoft SQL Server 2019 or higher
 Object storage - Any external server that supports downloading/uploading files. We use Azure Blob Storage. 
+Swear Analyzer - Python 3.8 with scikit-learn v0.19.2 (be careful with newer ones)
+Sentiment Analysis - Go version 1.16.5 or higher
 ```
 
 ### Installing 💻
+
+### Docker (Recommended)
+
+This project is completely set up with the Docker container system. Simply install the default Docker software for your operating system and execute the command **docker-compose up** to automatically compile, set up and deploy source files to your local system. This way, you may modify each part of the application as a developer using your preferred tool or IDE and ensure consistency betwen different environments.
+
+The Compose file written in YAML is located in the root directory as docker-compose.yml. Built docker images for every part are located in a DockerHub repository in [Document Analyzer - DockerHub](https://hub.docker.com/repository/docker/jaibarra/document-analyzer)
+
+### Standard (No Docker)
 
 #### Web 🕸
 
@@ -55,7 +66,7 @@ This will install all required dependencies for the React web project, as denote
 npm start
 ```
 
-If the above command doesn't work, try installing the Yarn package manager and running *yarn run start*.
+If the above command doesn't work, try installing the Yarn package manager and executing *yarn run start*.
 
 This will start the React development server associated with this project. You can access it at any browser, just type **localhost::3000** in the search bar. Be careful to not close the terminal window, as this will stop the server. You may also use NodeJS or React (Yarn) plugins in your IDE that allow you to run the previous terminal command. 
 
@@ -67,31 +78,21 @@ If the Services API and databases are already up and running, open the file **co
 
 It's possible to run the server on a computer connected to a local area network and use the website from other devices, but it's important that both database and API run on the same computer, as they communicate and exchange information. To connect from another device on a local network, simply replace the domain "localhost" with the IPv4 address of the server machine. On Windows, the IPv4 address is accessed by running the command *ipconfig* through cmd. On macOS you can go to System Preferences and select *Network* to display the machine's current IP Address.
 
-To start, grab a copy of Microsoft SQL Server as well a MongoDB (We tried the Community edition and it worked well) and install it locally. Download Visual Studio (not Code) and add the **.NET Core** dependencies required to run these projects. Then open **DocumentAnalyzerAPI.sln** located in the **API/DocumentAnalyzerAPI** folder. Press the start button to run the API on your local network.
+To start, grab a copy of Microsoft SQL Server as well a MongoDB (We tried the Community edition and it worked well) and install it locally. Download Visual Studio (not Code) and add the **.NET Core** dependencies required to run these projects. Then open **DocumentAnalyzerAPI.sln** located in the **BackEnd/Api/** folder. Press the start button to run the API on your local network.
 
-Navigate to the *NuGet Package Manager Console*, select the MVC subproject as *DocumentAnalyzerAPI.MVC* and run the following command:
-
-```
-update-database -Context ApplicationDbContext
-```
-
-Once it finishes, change the subproject to *DocumentAnalyzerAPI.I.D* and run:
-
-```
-update-database -Context EntitiesDbContext
-```
-
-This will create the necessary databases in SQL Server using the entities defined by .NET Core's Entity Framework. By default, it will try to connect to a local database instance. However, this will only work in Microsoft Windows platforms, because MS SQL Server only runs natively there. If required to run the API on a different operating system, modify the SQL Server connection string coded in *ConnectionStrings* attribute, located in the file **appsettings.json**, inside the folder *API/DocumentAnalyzerAPI/*.
+This will automatically create the necessary databases in SQL Server using the entities defined by .NET Core's Entity Framework. By default, it will try to connect to a local database instance on port 27017:27017. However, this will only work in Microsoft Windows platforms, because MS SQL Server only runs natively there. If required to run the API on a different operating system, modify the SQL Server connection string coded in *ConnectionStrings* attribute, located in the file **appsettings.json**.
 
 Finally, the client web app should update with the server information. The MongoDB Database will be created automatically and will continue to operate by itself in a local instance, but the same **appsettings.json** file allows for a different instance assigned to a specific connection string in the attribute *MongoDatabaseSettings*. For file storage it's also important to set the corresponding tokens for connecting to an Azure Blobs server. These are found in conjunction with the SQL Server and MongoDB connection strings.
 
 You may now change the *baseURL* string in the web app, as explained above. This will allow you to test the app's full functionality. 
 
+Next, it is necessary to run the analysis services, which are dockerized in each of the three folders located in **BackEnd/Services**, as well as the Keycloak and RabbitMQ instances. These are located in the Compose YAML file and must be run from here to avoid possible mistakes with port configurations.
+
 Our tests were made on Windows, macOS and Linux computers running React 17.0.3, Visual Studio and SQL Server 2019 for the full stack. A CI pipeline was also implemented with GitHub Actions on this repository for build, test and code quality analysis purposes.
 
 ## Deployment ✅
 
-For deployment on a live system, refer to the **Docs** folder of this GitHub project.
+For deployment on a live system, run **docker-compose up** on the root directory to automatically deploy a live system.
 
 ## Built With 🛠
 
@@ -107,10 +108,16 @@ For deployment on a live system, refer to the **Docs** folder of this GitHub pro
       <p align=center><img src="https://infinapps.com/wp-content/uploads/2018/10/mongodb-logo.png" height=130></p>
     </td>
     <td>
-      <p align=center><img src="https://cdn.worldvectorlogo.com/logos/microsoft-sql-server.svg" width=100 height=100></p>
+      <p align=center><img src="https://brandslogos.com/wp-content/uploads/images/microsoft-sql-server-logo-vector.svg" width=100 height=100></p>
     </td>
     <td>
       <p align=center><img src="https://www.jasoft.org/Blog/image.axd?picture=/2018/azure-storage-blob-logo.png" width=100 height=100></p>
+    </td>
+    <td>
+      <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/768px-Python-logo-notext.svg.png" width=100 height=90></p>
+    </td>
+    <td>
+      <p align=center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Go_Logo_Blue.svg/1200px-Go_Logo_Blue.svg.png" width=100 height=40></p>
     </td>
   </tr>
   
@@ -121,7 +128,7 @@ For deployment on a live system, refer to the **Docs** folder of this GitHub pro
     </td>
     <td>
       <p align=center><a href="https://dotnet.microsoft.com/"><b>ASP .NET Core</b></a>
-      </br>Services API</p>
+      </br>Services API and Name Analyzer</p>
     </td>
     <td>
       <p align=center>
@@ -137,6 +144,16 @@ For deployment on a live system, refer to the **Docs** folder of this GitHub pro
       <p align=center>
         <a href="https://azure.microsoft.com/en-us/services/storage/blobs/"><b>Azure Blob Storage</b></a>
       </br>File Storage</p>
+    </td>
+    <td>
+      <p align=center>
+        <a href="https://www.python.org/"><b>Python</b></a>
+      </br>Swear Analysis</p>
+    </td>
+    <td>
+      <p align=center>
+        <a href="https://golang.org/"><b>Go</b></a>
+      </br>Sentiment Analysis</p>
     </td>
   </tr>
 </table>
