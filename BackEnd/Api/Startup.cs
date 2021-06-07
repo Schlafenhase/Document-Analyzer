@@ -62,7 +62,7 @@ namespace DAApi
                 {
                     policy.AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithOrigins("http://localhost:3000")
+                        .WithOrigins("http://localhost:5003")
                         .AllowCredentials();
                 });
             });

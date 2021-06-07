@@ -10,13 +10,37 @@ namespace DAApi.Services
 {
     public class KeyCloakService : IKeyCloakService
     {
+        /// <summary>
+        /// Atribute that saves the Http client
+        /// </summary>
         private static readonly HttpClient client = new HttpClient();
 
+        /// <summary>
+        /// Constructor of the key cloak service
+        /// </summary>
         public KeyCloakService()
         {
 
         }
 
+        /// <summary>
+        /// Method that gets the bearer token from key cloak
+        /// </summary>
+        /// <param name="user">
+        /// String that is trying to log in
+        /// </param>
+        /// <param name="password">
+        /// String with the password of the user
+        /// </param>
+        /// <param name="clientId">
+        /// String with the client id
+        /// </param>
+        /// <param name="tokenURL">
+        /// String with the url
+        /// </param>
+        /// <returns>
+        /// String with the token
+        /// </returns>
         public async Task<string> GetToken(string user, string password, string clientId, string tokenURL)
         {
             try

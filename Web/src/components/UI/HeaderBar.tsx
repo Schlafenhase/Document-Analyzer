@@ -75,6 +75,9 @@ const Logo = styled.img`
 const HeaderBar = (props: any) => {
   const [currentPage, setCurrentPage] = useState("home");
 
+    /**
+     * Signs out of authenticated session and goes to root website
+     */
   function signOut() {
     localStorage.removeItem("token");
     setCurrentPage("/");

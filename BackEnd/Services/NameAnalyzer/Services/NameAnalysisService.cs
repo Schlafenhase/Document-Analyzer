@@ -12,11 +12,23 @@ namespace DANameAnalyzer.Services
 {
     public class NameAnalysisService
     {
+        /// <summary>
+        /// Constructor of NameAnalysisService
+        /// </summary>
         public NameAnalysisService()
         {
 
         }
 
+        /// <summary>
+        /// Method that makes the name analysis
+        /// </summary>
+        /// <param name="text">
+        /// String to be analyzed
+        /// </param>
+        /// <returns>
+        /// Document with the results
+        /// </returns>
         public static async Task<IDocument> MakeNameAnalysis(string text)
         {
             English.Register();
@@ -27,6 +39,18 @@ namespace DANameAnalyzer.Services
             return nlp.ProcessSingle(doc);
         }
 
+        /// <summary>
+        /// Method that searchs all the matching employees with the ones found in the text
+        /// </summary>
+        /// <param name="doc">
+        /// Document with the results
+        /// </param>
+        /// <param name="employees">
+        /// Database employees
+        /// </param>
+        /// <returns>
+        /// Dictionary with the results
+        /// </returns>
         public static Dictionary<string, int> SearchEmployees(IDocument doc, IEnumerable<Employee> employees)
         {
             Dictionary<string, int> results = new();

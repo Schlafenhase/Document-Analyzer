@@ -19,7 +19,7 @@ namespace DAApi.Controllers
     public class FileController : Controller
     {
         /// <summary>
-        /// Atribute that stores the file service
+        /// Atribute that handle the services and configurations
         /// </summary>
         private readonly IFileService _fileService;
         private readonly MongoFileService _mongoFileService;

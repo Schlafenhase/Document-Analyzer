@@ -9,6 +9,9 @@ namespace DAApi.Models
 {
     public class MongoSwearAnalysisFile
     {
+        /// <summary>
+        /// Atributes of MongoSwearAnalysisFile
+        /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }

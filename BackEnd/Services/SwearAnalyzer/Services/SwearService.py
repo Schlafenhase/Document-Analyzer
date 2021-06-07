@@ -12,6 +12,7 @@ class SwearAnalysisService:
         self.loaded_model = pickle.load(open(profanityPath, "rb"))
         self.vectorizer = pickle.load(open(vectorizerPath, "rb"))
     
+    # Method that makes the swear analysis
     def makeSwearAnalysis(self, text):
         a = 0
         for word in text.split():

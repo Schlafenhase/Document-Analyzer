@@ -17,7 +17,7 @@ namespace DAApi.Controllers
     public class AzureBlobAuthController : Controller
     {
         /// <summary>
-        /// Atributes that store the azure blob storage authentication service and configuration
+        /// Atributes that handle the services and configurations
         /// </summary>
         private readonly IAzureBlobAuthService _azureBlobAuthService;
         private readonly AzureBlobStorageConfig _azureBlobStorageConfig;
@@ -26,10 +26,10 @@ namespace DAApi.Controllers
         /// Construction of AzureBlobAuthController
         /// </summary>
         /// <param name="azureBlobAuthService">
-        /// Azure Blob Storage Authentication service
+        /// Azure Blob Storage Authentication service interface
         /// </param>
         /// <param name="azureOptionsMonitor">
-        /// Azure Blob Storage Authentication configuration
+        /// Azure options
         /// </param>
         public AzureBlobAuthController(IAzureBlobAuthService azureBlobAuthService, IOptionsMonitor<AzureBlobStorageConfig> azureOptionsMonitor)
         {

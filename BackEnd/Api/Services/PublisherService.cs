@@ -20,6 +20,9 @@ namespace DAApi.Services
 {
     public class PublisherService
     {
+        /// <summary>
+        /// Atributes that handle services and configurations
+        /// </summary>
         private readonly IConnection connection;
         private readonly IModel channel;
         private readonly string replyQueueName;
@@ -29,6 +32,15 @@ namespace DAApi.Services
         private readonly IHubContext<ChatHub, IChatClient> _chatHub;
         private readonly RabbitMQConfig _rabbitMQConfig;
 
+        /// <summary>
+        /// Constructor of PublisherService
+        /// </summary>
+        /// <param name="chatHub">
+        /// Connection associated with websockets
+        /// </param>
+        /// <param name="rabbitOptionsMonitor">
+        /// RabbitMQ configuration
+        /// </param>
         public PublisherService(IHubContext<ChatHub, IChatClient> chatHub, IOptionsMonitor<RabbitMQConfig> rabbitOptionsMonitor)
         {
             _rabbitMQConfig = rabbitOptionsMonitor.CurrentValue;
@@ -65,6 +77,18 @@ namespace DAApi.Services
             };
         }
 
+        /// <summary>
+        /// Method that publishes an item to the queue
+        /// </summary>
+        /// <param name="item">
+        /// Item to be published
+        /// </param>
+        /// <param name="queue">
+        /// Queue that will save the item
+        /// </param>
+        /// <returns>
+        /// Integer indicating if the operations was successful
+        /// </returns>
         public int PublishToQueue(QueueItem item, string queue)
         {
             try

@@ -16,7 +16,7 @@ namespace DAApi.Controllers
     public class EmployeeController : Controller
     {
         /// <summary>
-        /// Atribute that stores the employee service
+        /// Atribute that handle the services and configurations
         /// </summary>
         private readonly IEmployeeService _employeeService;
 
@@ -24,7 +24,7 @@ namespace DAApi.Controllers
         /// Constructor of EmployeeController
         /// </summary>
         /// <param name="employeeService">
-        /// Employee service
+        /// Employee service interface
         /// </param>
         public EmployeeController(IEmployeeService employeeService)
         {

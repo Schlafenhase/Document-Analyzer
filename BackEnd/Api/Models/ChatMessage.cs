@@ -7,6 +7,9 @@ namespace DAApi.Models
 {
     public class ChatMessage
     {
+        /// <summary>
+        /// Atributes of ChatMessage
+        /// </summary>
         public string User { get; set; }
         public string Message { get; set; }
     }

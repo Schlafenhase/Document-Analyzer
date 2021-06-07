@@ -8,6 +8,9 @@ namespace DANameAnalyzer.Models
 {
     public class Config
     {
+        /// <summary>
+        /// Atributes of Config
+        /// </summary>
         public string HostName { get; set; }
         public string QueueName { get; set; }
         public string SqlConnection { get; set; }

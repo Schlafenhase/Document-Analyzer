@@ -12,10 +12,19 @@ namespace DANameAnalyzer
 {
     class NameAnalyzer
     {
+        /// <summary>
+        /// Atributes that stores services and configurations
+        /// </summary>
         private static DocumentAnalyzerDBContext _context;
         private static EmployeeService _employeeService;
         private static MongoFileService _mongoFileService;
 
+        /// <summary>
+        /// Main method
+        /// </summary>
+        /// <param name="args">
+        /// Arguments of the application
+        /// </param>
         static void Main(string[] args)
         {
             Config config = ReadConfig();
@@ -27,6 +36,12 @@ namespace DANameAnalyzer
             return;
         }
 
+        /// <summary>
+        /// Method that reads the configuration file
+        /// </summary>
+        /// <returns>
+        /// Configuration data
+        /// </returns>
         private static Config ReadConfig()
         {
             using (StreamReader r = new("appsettings.json"))
@@ -36,6 +51,15 @@ namespace DANameAnalyzer
             }
         }
 
+        /// <summary>
+        /// Method that receives data from the queue
+        /// </summary>
+        /// <param name="hostname">
+        /// String with the host name
+        /// </param>
+        /// <param name="queueName">
+        /// String with the queue name
+        /// </param>
         private static void ReceiveFromQueue(string hostname, string queueName)
         {
             var factory = new ConnectionFactory() { HostName = hostname };
@@ -90,6 +114,12 @@ namespace DANameAnalyzer
             }
         }
 
+        /// <summary>
+        /// Method that makes the analysis
+        /// </summary>
+        /// <param name="item">
+        /// Item to be analyzed
+        /// </param>
         private static void MakeAnalysis(QueueItem item)
         {
             var doc = NameAnalysisService.MakeNameAnalysis(item.Text).Result;
