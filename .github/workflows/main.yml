@@ -67,7 +67,7 @@ jobs:
   build-api:
     defaults:
       run:
-        working-directory: ./API/DocumentAnalyzerAPI
+        working-directory: ./BackEnd/Api
           
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -98,7 +98,7 @@ jobs:
     
     defaults:
       run:
-        working-directory: ./API/DocumentAnalyzerAPI
+        working-directory: ./BackEnd/Api
           
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
