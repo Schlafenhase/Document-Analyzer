@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3"
 services:
   db-sql:
     image: mcr.microsoft.com/mssql/server
@@ -19,9 +19,6 @@ services:
     container_name: DAM
   keycloak:
     image: quay.io/keycloak/keycloak
-    environment: 
-      - "KEYCLOAK_USER=Schlafenhase"
-      - "KEYCLOAK_PASSWORD=@Schlafenhase2021"
     ports:
       - "8080:8080"
     container_name: keycloak

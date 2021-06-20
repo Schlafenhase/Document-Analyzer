@@ -2,7 +2,7 @@ import axios from "axios";
 
 //export const BaseURL = "https://daapi.conveyor.cloud";
 //export const BaseURL = "https://localhost:44328";
-export const BaseURL = "http://localhost:8084";
+export const BaseURL = "http://52.171.228.222:8084";
 
 export const checkToken =  async () => {
     const savedToken = localStorage.getItem("token");

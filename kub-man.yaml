@@ -1,0 +1,447 @@
+# Document Analyzer Manifest File
+#
+# SQL Database
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-sql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-sql
+  template:
+    metadata:
+      labels:
+        app: db-sql
+    spec:
+      terminationGracePeriodSeconds: 30
+      hostname: mssqlinst
+      securityContext:
+        fsGroup: 10001
+      containers:
+      - image: mcr.microsoft.com/mssql/server
+        name: dadb
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mssql
+              key: SA_PASSWORD
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - mountPath: /var/opt/mssql
+          name: mssql
+      volumes:
+      - name: mssql
+        persistentVolumeClaim:
+          claimName: mssql-data       
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-sql
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    name: "1433"
+    port: 1433
+    targetPort: 1433
+  selector:
+    app: db-sql
+---
+# Storage
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: azure-disk
+provisioner: kubernetes.io/azure-disk
+parameters:
+  storageaccounttype: Standard_LRS
+  kind: Managed
+# Persistecy
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-data
+  annotations:
+    volume.beta.kubernetes.io/storage-class: azure-disk
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+#
+# MongoDB
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-mongo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db-mongo
+    spec:
+      containers:
+      - image: mongo
+        imagePullPolicy: ""
+        name: dam
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongodb
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: mongodb
+        persistentVolumeClaim:
+          claimName: mongodb
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-mongo
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "27017"
+    port: 27017
+    targetPort: 27017
+  selector:
+    app: db-mongo
+# Persistency
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+# 
+# Keycloak
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: keycloak
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak
+        env:
+        - name: KEYCLOAK_USER
+          value: "Schlafenhase"
+        - name: KEYCLOAK_PASSWORD
+          value: "@Schlafenhase2021"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: https
+          containerPort: 8443
+        readinessProbe:
+          httpGet:
+            path: /auth/realms/master
+            port: 8080
+      restartPolicy: Always
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: keycloak
+#
+# RabbitMQ
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rabbitmq
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - image: rabbitmq:3-management
+        imagePullPolicy: ""
+        name: rabbitmq
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+      hostname: rabbit
+      restartPolicy: Always
+      serviceAccountName: ""
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "5672"
+    port: 5672
+    targetPort: 5672
+  - name: "15672"
+    port: 15672
+    targetPort: 15672
+  selector:
+    app: rabbitmq
+#
+# REST API
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: restapi
+  name: restapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: restapi
+  template:
+    metadata:
+      labels:
+        app: restapi
+        service: restapi
+    spec:
+      containers:
+      - name: main-api
+        image: dacontreg.azurecr.io/da-main-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://+:80
+      restartPolicy: Always
+
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restapi
+  labels:
+    app: restapi
+    service: restapi
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "main-api"
+    port: 8084
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: restapi
+#
+# Web
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: dacontreg.azurecr.io/da-web:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "web"
+    port: 5001
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: web
+#
+# Name Analyzer
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: name-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: name-service
+  template:
+    metadata:
+      labels:
+        app: name-service
+    spec:
+      containers:
+      - name: name-service
+        image: dacontreg.azurecr.io/da-name-service:latest
+        imagePullPolicy: Always
+      restartPolicy: Always
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: name-service
+spec:
+  type: ClusterIP
+  ports:
+  - name: "name-service"
+    port: 32800
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: name-service
+#
+# Sentiment Analyzer
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sentiment-service
+  template:
+    metadata:
+      labels:
+        app: sentiment-service
+    spec:
+      containers:
+      - name: sentiment-service
+        image: dacontreg.azurecr.io/da-sentiment-service:latest
+        imagePullPolicy: Always
+      restartPolicy: Always
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentiment-service
+spec:
+  type: ClusterIP
+  ports:
+  - name: "sentiment-service"
+    port: 32800
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: sentiment-service
+#
+# Swear Analyzer
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swear-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: swear-service
+  template:
+    metadata:
+      labels:
+        app: swear-service
+    spec:
+      containers:
+      - name: swear-service
+        image: dacontreg.azurecr.io/da-swear-service:latest
+        imagePullPolicy: Always
+      restartPolicy: Always
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swear-service
+spec:
+  type: ClusterIP
+  ports:
+  - name: "swear-service"
+    port: 32800
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: swear-service
