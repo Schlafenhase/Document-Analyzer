@@ -14,8 +14,8 @@ variables:
   dockerRegistryServiceConnection: '1a865545-d17e-409e-8058-7b7564ce2818'
   imageRepository: 'schlafenhasedocumentanalyzer'
   containerRegistry: 'dacontreg.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
+  dockerfilePath: './Web/Dockerfile'
+  tag: 'dacontreg.azurecr.io/da-web:latest'
   imagePullSecret: 'dacontreg7668d125-auth'
 
   # Agent VM image name
