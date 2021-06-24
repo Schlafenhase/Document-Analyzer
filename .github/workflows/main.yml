@@ -7,7 +7,7 @@ on:
     branches: [master, develop-1.0, release-1.0, develop-3.0]
 
 jobs:
- kubernete-web:
+  kubernete-web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -22,7 +22,6 @@ jobs:
           cd ./Web
           docker build . -t dacontreg.azurecr.io/da-web:latest 
           docker push dacontreg.azurecr.io/da-web:latest
-         
 
       - uses: Azure/aks-set-context@v1
         with:
