@@ -19,7 +19,8 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build . -t dacontreg.azurecr.io/da-web:latest --label dockerfile-path=./Web
+          cd ./Web
+          docker build . -t dacontreg.azurecr.io/da-web:latest 
           docker push dacontreg.azurecr.io/da-web:latest
 
       - uses: Azure/aks-set-context@v1
