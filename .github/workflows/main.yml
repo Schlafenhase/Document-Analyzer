@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build -f ./Web/Dockerfile -t dacontreg.azurecr.io/da-web:latest
+          docker build -f ./Web/Dockerfile -t dacontreg.azurecr.io/da-web:latest .
           docker push dacontreg.azurecr.io/da-web:latest
 
       - uses: Azure/aks-set-context@v1
