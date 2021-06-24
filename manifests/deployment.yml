@@ -1,19 +1,23 @@
-apiVersion : apps/v1
+# Deployment
+---
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: schlafenhasedocumentanalyzer 
+  name: web
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: schlafenhasedocumentanalyzer
+      app: web
   template:
     metadata:
       labels:
-        app: schlafenhasedocumentanalyzer 
+        app: web
     spec:
       containers:
-        - name: schlafenhasedocumentanalyzer 
-          image: dacontreg.azurecr.io/schlafenhasedocumentanalyzer
-          ports:
-          - containerPort: 80
+      - name: web
+        image: dacontreg.azurecr.io/da-web:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
