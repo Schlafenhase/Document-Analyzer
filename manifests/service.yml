@@ -1,0 +1,15 @@
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "web"
+    port: 5001
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: web
