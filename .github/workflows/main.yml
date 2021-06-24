@@ -8,6 +8,7 @@ on:
 
 jobs:
   kubernete-web:
+    needs: [test-web]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -50,6 +51,7 @@ jobs:
           kubectl rollout restart deployment web
 
   kubernete-api:
+    needs: [test-api]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -89,7 +91,7 @@ jobs:
             demo-k8s-secret
 
       - run: |
-          kubectl rollout restart deployment api
+          kubectl rollout restart deployment restapi
 
   build-web:
     defaults:
