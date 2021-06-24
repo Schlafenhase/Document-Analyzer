@@ -47,8 +47,8 @@ jobs:
           imagepullsecrets: |
             demo-k8s-secret
 
-       - run: |
-           kubectl rollout restart deployment web
+      - run: |
+          kubectl rollout restart deployment web
 
   kubernete-api:
     runs-on: ubuntu-latest
@@ -90,7 +90,7 @@ jobs:
             demo-k8s-secret
 
       - run: |
-           kubectl rollout restart deployment api
+          kubectl rollout restart deployment api
 
   build-web:
     defaults:
